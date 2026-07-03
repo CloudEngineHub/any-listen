@@ -90,8 +90,8 @@ const defaultSetting: AnyListen.AppSetting = {
   'desktopLyric.classic.style.lyricUnplayColor': 'rgba(87, 143, 255, 1)',
   'desktopLyric.classic.style.lyricPlayedColor': 'rgba(39, 249, 192, 1)',
   'desktopLyric.classic.style.lyricShadowColor': 'rgba(0, 0, 0, 0.6)',
-  'desktopLyric.classic.style.isFontWeightFont': true,
-  'desktopLyric.classic.style.isFontWeightLine': true,
+  'desktopLyric.classic.style.isFontWeightFont': false,
+  'desktopLyric.classic.style.isFontWeightLine': false,
   'desktopLyric.classic.style.isFontWeightExtended': false,
 
   'desktopLyric.multiLine.width': 450,
@@ -143,8 +143,11 @@ const defaultSetting: AnyListen.AppSetting = {
 // 使用新年皮肤
 if (new Date().getMonth() < 2) {
   defaultSetting['theme.id'] = 'happy_new_year'
-  defaultSetting['desktopLyric.classic.style.lyricPlayedColor'] = 'rgba(255, 57, 71, 1)'
   defaultSetting['desktopLyric.multiLine.style.lyricPlayedColor'] = 'rgba(255, 57, 71, 1)'
+
+  defaultSetting['desktopLyric.classic.style.lyricUnplayColor'] = 'rgba(255, 57, 71, 1)'
+  defaultSetting['desktopLyric.classic.style.lyricPlayedColor'] = 'rgba(255, 242, 87, 1)'
+  defaultSetting['desktopLyric.classic.style.lyricShadowColor'] = 'rgba(111, 0, 0, 0.58)'
 }
 
 export default defaultSetting
