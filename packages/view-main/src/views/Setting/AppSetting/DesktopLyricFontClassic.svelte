@@ -86,7 +86,7 @@
           onbeforechange={(val) => {
             const valNum = parseInt(val)
             if (valNum < 10) return '10'
-            if (valNum > 150) return '150'
+            if (valNum > 200) return '200'
             if (isNaN(valNum)) return fontSize.val.toString()
             return valNum.toString()
           }}

@@ -73,6 +73,8 @@ const initMultiLineWindowSize = () => {
     width = bounds.width
     height = bounds.height
   }
+  width = Math.trunc(width)
+  height = Math.trunc(height)
   return {
     x,
     y,
@@ -81,16 +83,16 @@ const initMultiLineWindowSize = () => {
   }
 }
 const getFontSizeLevel = (fontSize: number) => {
-  if (fontSize <= 30) return 1
-  if (fontSize <= 50) return 1.2
-  if (fontSize <= 66) return 1.6
+  if (fontSize <= 46) return 1
+  if (fontSize <= 60) return 1.2
+  if (fontSize <= 80) return 1.6
   return 2
 }
 export const getClassicWindowSize = () => {
   let fontSize = appState.appSetting['desktopLyric.classic.style.fontSize']
   const lines = appState.appSetting['desktopLyric.classic.showExtendedLyrics'] ? 6 : 4
   let height = Math.ceil(fontSize * lines * 1.2 + fontSize / 2 + fontSize * 0.16 * 4)
-  let width = fontSize * 30 * getFontSizeLevel(fontSize)
+  let width = fontSize * 26 * getFontSizeLevel(fontSize)
   let x = appState.appSetting['desktopLyric.classic.x']
   let y = appState.appSetting['desktopLyric.classic.y']
 
@@ -114,6 +116,8 @@ export const getClassicWindowSize = () => {
     height = bounds.height
   }
 
+  width = Math.trunc(width)
+  height = Math.trunc(height)
   return {
     x,
     y,
