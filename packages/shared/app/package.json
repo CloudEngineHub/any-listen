@@ -9,7 +9,7 @@
     "@any-listen/theme": "workspace:@shared/theme@*",
     "@any-listen/web": "workspace:@shared/web@*",
     "better-sqlite3": "^12.11.1",
-    "iconv-lite": "^0.7.2",
+    "iconv-lite": "^0.7.3",
     "jschardet": "^3.1.4",
     "jsonschema": "^1.5.0",
     "message2call": "^2.0.3",
@@ -19,6 +19,6 @@
     "@any-listen/eslint": "workspace:@shared/eslint@*",
     "@any-listen/types": "workspace:@shared/types@*",
     "@types/better-sqlite3": "^7.6.13",
-    "vite": "^8.1.2"
+    "vite": "^8.1.3"
   }
 }
