@@ -7,6 +7,7 @@
 ### Fixed
 
 - Fixed an issue where moving songs could result in an incorrect saved order in some cases.
+- Fixed an issue with lyric timestamp tag parsing.
 
 ---
 
@@ -19,3 +20,4 @@
 ### 修复
 
 - 修复在某些情况下移动歌曲时可能导致保存的顺序不对的问题。
+- 修复歌词时间标签解析问题。
