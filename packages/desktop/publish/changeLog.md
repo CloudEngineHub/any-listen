@@ -4,6 +4,7 @@
 
 - Added a **Track Number** sorting option for song lists ([#152](https://github.com/any-listen/any-listen/issues/152)).
 - Added **Classic Lyrics** mode for Desktop Lyrics.
+- Added **Desktop Lyrics** controls to the **Tray Menu**.
 
 ### Fixed
 
@@ -22,6 +23,7 @@
 
 - 新增歌曲列表排序方式 **「按曲目编号」** 选项（[#152](https://github.com/any-listen/any-listen/issues/152)）。
 - 桌面歌词新增 **「经典歌词」** 模式。
+- 在 **「托盘菜单」** 中新增 **「桌面歌词」** 相关控制。
 
 ### 修复
 

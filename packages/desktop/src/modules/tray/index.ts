@@ -26,9 +26,9 @@ let isExistMainWindow: null | (() => boolean) = null
 let isShowMainWindow: null | (() => boolean) = null
 
 const watchConfigKeys = [
-  // 'desktopLyric.enable',
-  // 'desktopLyric.isLock',
-  // 'desktopLyric.isAlwaysOnTop',
+  'desktopLyric.enable',
+  'desktopLyric.isLock',
+  'desktopLyric.isAlwaysOnTop',
   'player.isShowStatusBarLyric',
   'tray.themeId',
   'tray.enable',
@@ -136,52 +136,52 @@ export const createMenu = () => {
   let menu: Electron.MenuItemConstructorOptions[] = createPlayerMenu()
   if (playerState.empty) for (const m of menu) m.enabled = false
 
-  // menu.push({ type: 'separator' })
-  // menu.push(
-  //   appState.appSetting['desktopLyric.enable']
-  //     ? {
-  //         label: i18n.t('desktop_lyric__hide'),
-  //         click() {
-  //           updateSetting({ 'desktopLyric.enable': false })
-  //         },
-  //       }
-  //     : {
-  //         label: i18n.t('desktop_lyric__show'),
-  //         click() {
-  //           updateSetting({ 'desktopLyric.enable': true })
-  //         },
-  //       }
-  // )
-  // menu.push(
-  //   appState.appSetting['desktopLyric.isLock']
-  //     ? {
-  //         label: i18n.t('desktop_lyric__unlock'),
-  //         click() {
-  //           updateSetting({ 'desktopLyric.isLock': false })
-  //         },
-  //       }
-  //     : {
-  //         label: i18n.t('desktop_lyric__lock'),
-  //         click() {
-  //           updateSetting({ 'desktopLyric.isLock': true })
-  //         },
-  //       }
-  // )
-  // menu.push(
-  //   appState.appSetting['desktopLyric.isAlwaysOnTop']
-  //     ? {
-  //         label: i18n.t('desktop_lyric__top_off'),
-  //         click() {
-  //           updateSetting({ 'desktopLyric.isAlwaysOnTop': false })
-  //         },
-  //       }
-  //     : {
-  //         label: i18n.t('desktop_lyric__top_on'),
-  //         click() {
-  //           updateSetting({ 'desktopLyric.isAlwaysOnTop': true })
-  //         },
-  //       }
-  // )
+  menu.push({ type: 'separator' })
+  menu.push(
+    appState.appSetting['desktopLyric.enable']
+      ? {
+          label: i18n.t('desktop_lyric.hide'),
+          click() {
+            updateSetting({ 'desktopLyric.enable': false })
+          },
+        }
+      : {
+          label: i18n.t('desktop_lyric.show'),
+          click() {
+            updateSetting({ 'desktopLyric.enable': true })
+          },
+        }
+  )
+  menu.push(
+    appState.appSetting['desktopLyric.isLock']
+      ? {
+          label: i18n.t('desktop_lyric.unlock'),
+          click() {
+            updateSetting({ 'desktopLyric.isLock': false })
+          },
+        }
+      : {
+          label: i18n.t('desktop_lyric.lock'),
+          click() {
+            updateSetting({ 'desktopLyric.isLock': true })
+          },
+        }
+  )
+  menu.push(
+    appState.appSetting['desktopLyric.isAlwaysOnTop']
+      ? {
+          label: i18n.t('desktop_lyric.win_top_off'),
+          click() {
+            updateSetting({ 'desktopLyric.isAlwaysOnTop': false })
+          },
+        }
+      : {
+          label: i18n.t('desktop_lyric.win_top_on'),
+          click() {
+            updateSetting({ 'desktopLyric.isAlwaysOnTop': true })
+          },
+        }
+  )
   if (isMac) {
     menu.push({ type: 'separator' })
     menu.push(
