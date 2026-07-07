@@ -17,13 +17,14 @@ const defaultOptions: Options = {
       'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
   },
   maxRedirect: 5,
+  retryNum: 3,
 } as const
 const redirectDispatcher = interceptors.redirect({ maxRedirections: defaultOptions.maxRedirect })
 const dispatchers = [
   interceptors.retry({
-    maxRetries: 3,
-    minTimeout: 1000,
-    maxTimeout: 10000,
+    maxRetries: defaultOptions.retryNum,
+    minTimeout: 500,
+    maxTimeout: 6000,
     timeoutFactor: 2,
     retryAfter: true,
   }),
@@ -31,19 +32,24 @@ const dispatchers = [
 ] as const
 let proxyAgent: ProxyAgent | null = null
 let globalDispatcher = getGlobalDispatcher()
-const buildDispatcher = (redirectDispatcher: Dispatcher.DispatcherComposeInterceptor | null, retryNum = 3) => {
+const buildDispatcher = (
+  redirectDispatcher: Dispatcher.DispatcherComposeInterceptor | null,
+  retryNum = defaultOptions.retryNum
+) => {
   const otherInterceptors =
-    retryNum == 3
+    retryNum == defaultOptions.retryNum
       ? dispatchers
-      : [
-          interceptors.retry({
-            maxRetries: retryNum,
-            minTimeout: 1000,
-            maxTimeout: 6000,
-            timeoutFactor: 2,
-            retryAfter: true,
-          }),
-        ]
+      : retryNum
+        ? [
+            interceptors.retry({
+              maxRetries: retryNum,
+              minTimeout: 500,
+              maxTimeout: 6000,
+              timeoutFactor: 2,
+              retryAfter: true,
+            }),
+          ]
+        : []
   if (redirectDispatcher) {
     return (proxyAgent ?? globalDispatcher).compose(redirectDispatcher, ...otherInterceptors)
   }
@@ -219,6 +225,14 @@ const buildRequestDispatcher = (options: Options) => {
       }
     }
   }
+  if (dispatcher == null && options.retryNum != null) {
+    dispatcher = buildDispatcher(
+      options.maxRedirect == 0
+        ? null
+        : interceptors.redirect({ maxRedirections: options.maxRedirect ?? defaultOptions.maxRedirect }),
+      options.retryNum
+    )
+  }
   return dispatcher
 }
 
@@ -282,6 +296,8 @@ export const request = async <T = unknown>(url: string, options: Options = {}): 
 export const verifyResource = async (url: string, opts: Options = {}) => {
   const resp = await request(url, {
     ...opts,
+    timeout: opts.timeout ?? 5000,
+    retryNum: 0,
     headers: {
       ...(opts.headers ?? {}),
       Range: 'bytes=0-1',

@@ -152,6 +152,7 @@
         <ListItem
           musicinfo={item}
           listid={listinfo.id}
+          {source}
           active={activeIndex == index}
           selected={select.list.includes(item)}
           selectedactive={hotkey.isShiftDown && select.selectIndex == index}

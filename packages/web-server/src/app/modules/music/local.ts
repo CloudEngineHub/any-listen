@@ -51,10 +51,8 @@ export const getMusicUrl = async ({
 export const getMusicPicUrl = async ({
   musicInfo,
   isRefresh = false,
-  listId,
 }: {
   musicInfo: AnyListen.Music.MusicInfoLocal
-  listId?: string | null
   isRefresh?: boolean
 }): Promise<AnyListen.IPCMusic.MusicPicInfo | null> => {
   if (isRefresh && (!musicInfo.meta.picUrl || !(await verifyResourceBoolean(musicInfo.meta.picUrl)))) {

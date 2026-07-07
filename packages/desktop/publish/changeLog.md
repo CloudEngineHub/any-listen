@@ -6,6 +6,10 @@
 - Added **Classic Lyrics** mode for Desktop Lyrics.
 - Added **Desktop Lyrics** controls to the **Tray Menu**.
 
+### Improved
+
+- Improved song cover loading logic and fixed an issue where cover images were not displayed in some cases ([#225](https://github.com/any-listen/any-listen/issues/225)).
+
 ### Fixed
 
 - Fixed an issue where moving songs could result in an incorrect saved order in some cases.
@@ -24,6 +28,10 @@
 - 新增歌曲列表排序方式 **「按曲目编号」** 选项（[#152](https://github.com/any-listen/any-listen/issues/152)）。
 - 桌面歌词新增 **「经典歌词」** 模式。
 - 在 **「托盘菜单」** 中新增 **「桌面歌词」** 相关控制。
+
+### 优化
+
+- 优化歌曲封面加载逻辑，修复某些情况下封面不显示的问题（[#225](https://github.com/any-listen/any-listen/issues/225)）。
 
 ### 修复
 

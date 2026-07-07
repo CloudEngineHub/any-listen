@@ -6,40 +6,38 @@
   import { useHidePlayDtail } from './shared/useHidePlayDtail'
   import Footer from './Footer/index.svelte'
   import { playDetailState } from '@/modules/playDetail/store/state'
-  import { playerEvent } from '@/modules/player/store/event'
-  import { playerState } from '@/modules/player/store/state'
   import { useSettingValue } from '@/modules/setting/reactive.svelte'
   import { tick, untrack } from 'svelte'
   import { MODAL_CLASSNAMES } from '@/shared/constants'
   import { buildUrl, checkPicUrl } from '@any-listen/web'
   import { settingState } from '@/modules/setting/store/state'
+  import { musicInfo } from '@/modules/player/reactive.svelte'
   let introend = $state(playDetailState.isShowPlayDetail)
   let bgSrc = $state<string>()
   const isDynamicBackground = useSettingValue('playDetail.isDynamicBackground')
   const hidePlayDtail = useHidePlayDtail()
   let domContainer: HTMLElement | null = $state(null)
 
+  const handlePic = (url?: string | null) => {
+    if (url) {
+      url = buildUrl(url, settingState.setting['network.proxyAllResources'])
+      void checkPicUrl(url, settingState.setting['network.proxyAllResources']).then((vaild) => {
+        if (vaild) {
+          bgSrc = `url(${url})`
+        } else {
+          bgSrc = undefined
+        }
+      })
+    } else {
+      bgSrc = undefined
+    }
+  }
   $effect(() => {
     if (!isDynamicBackground.val) {
-      bgSrc = undefined
+      bgSrc &&= undefined
       return
     }
-    const handlePic = (url?: string | null) => {
-      if (url) {
-        url = buildUrl(url, settingState.setting['network.proxyAllResources'])
-        void checkPicUrl(url, settingState.setting['network.proxyAllResources']).then((vaild) => {
-          if (vaild) {
-            bgSrc = `url(${url})`
-          } else {
-            bgSrc = undefined
-          }
-        })
-      } else {
-        bgSrc = undefined
-      }
-    }
-    handlePic(playerState.musicInfo.pic)
-    return playerEvent.on('picUpdated', handlePic)
+    handlePic($musicInfo?.pic)
   })
 
   let parentNode: HTMLElement | null | undefined = null

@@ -19,6 +19,7 @@
     musicinfo,
     listid,
     index,
+    source,
     picStyle,
     selected,
     selectedactive,
@@ -30,6 +31,7 @@
   }: {
     musicinfo: AnyListen.Music.MusicInfo
     listid: string
+    source: AnyListen.Player.SourceType
     index: number
     picStyle: string
     playing?: boolean
@@ -61,7 +63,7 @@
   let retryedLoadPic = false
   const loadPic = () => {
     cancelLoadPic?.()
-    cancelLoadPic = getMusicPicDelay({ musicInfo: musicinfo, listId: listid, isRefresh: retryedLoadPic }, (url) => {
+    cancelLoadPic = getMusicPicDelay({ musicInfo: musicinfo, listId: listid, source, isRefresh: retryedLoadPic }, (url) => {
       cancelLoadPic = undefined
       void tick().then(() => {
         picUrl = url

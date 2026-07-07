@@ -1,4 +1,3 @@
-import { updateMusicPic } from '@any-listen/app/modules/musicList'
 import {
   getMusicLyricByExtensionSource,
   getMusicLyric as getMusicLyricResource,
@@ -101,10 +100,8 @@ export const getMusicPicByExtSource = async ({
 export const getMusicPicUrl = async ({
   musicInfo,
   isRefresh = false,
-  listId,
 }: {
   musicInfo: AnyListen.Music.MusicInfo
-  listId?: string | null
   isRefresh?: boolean
 }): Promise<AnyListen.IPCMusic.MusicPicInfo> => {
   if (musicInfo.meta.picUrl && !isRefresh) {
@@ -114,10 +111,7 @@ export const getMusicPicUrl = async ({
     }
   }
   const url = await getMusicPicResource({ musicInfo })
-  if (listId) {
-    musicInfo.meta.picUrl = url
-    void updateMusicPic(listId, musicInfo)
-  }
+
   return {
     url,
     isFromCache: false,

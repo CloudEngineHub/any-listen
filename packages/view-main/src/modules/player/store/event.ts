@@ -207,6 +207,10 @@ class Event extends _Event {
   mediaDeviceChanged(id: string) {
     this.emitEvent('mediaDeviceChanged', id)
   }
+
+  listMusicPicUpdated(musicInfo: AnyListen.Music.MusicInfo, listId?: string | null, source?: AnyListen.Player.SourceType | null) {
+    this.emitEvent('listMusicPicUpdated', musicInfo, listId, source)
+  }
 }
 
 type EventMethods = Omit<Event, keyof _Event | 'emitEvent'>

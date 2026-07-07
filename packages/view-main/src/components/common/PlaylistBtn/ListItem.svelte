@@ -50,12 +50,15 @@
   let retryedLoadPic = false
   const loadPic = () => {
     cancelLoadPic?.()
-    cancelLoadPic = getMusicPicDelay({ musicInfo: info.musicInfo, listId: info.listId, isRefresh: retryedLoadPic }, (url) => {
-      cancelLoadPic = undefined
-      void tick().then(() => {
-        picUrl = url
-      })
-    })
+    cancelLoadPic = getMusicPicDelay(
+      { musicInfo: info.musicInfo, listId: info.listId, source: info.source, isRefresh: retryedLoadPic },
+      (url) => {
+        cancelLoadPic = undefined
+        void tick().then(() => {
+          picUrl = url
+        })
+      }
+    )
   }
 
   onMount(() => {

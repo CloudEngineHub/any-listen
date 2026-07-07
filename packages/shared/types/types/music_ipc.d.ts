@@ -38,7 +38,6 @@ declare namespace AnyListen {
 
     interface GetMusicPicInfo {
       musicInfo: Music.MusicInfo
-      listId?: string | null
       isRefresh?: boolean
       // toggleSource?: boolean
     }

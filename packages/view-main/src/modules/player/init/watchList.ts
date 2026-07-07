@@ -4,6 +4,7 @@ import { onRelease } from '@/modules/app/shared'
 import { hasDislike } from '@/modules/dislikeList/store/actions'
 import { dislikeListEvent } from '@/modules/dislikeList/store/event'
 import { dislikeListState } from '@/modules/dislikeList/store/state'
+import { extensionEvent } from '@/modules/extension/store/event'
 import { getListMusics } from '@/modules/musicLibrary/store/actions'
 import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
 import { onSettingChanged } from '@/modules/setting/shared'
@@ -21,6 +22,7 @@ import {
   updatePlayListMusic,
 } from '../store/actions'
 import { playerEvent } from '../store/event'
+import { loadImageUrl, loadMusicLyric } from '../store/playerActions'
 import { playerState } from '../store/state'
 
 let syncId = ''
@@ -97,32 +99,42 @@ const handleListChangeSync = (listIds: string[]) => {
   throttleListChangeSync()
 }
 
-let prelistId: string | null = null
-const updatedMusicInfos = new Set<AnyListen.Music.MusicInfo>()
+const buildMusicInfoMapId = (
+  musicInfo: AnyListen.Music.MusicInfo,
+  listId: string | null,
+  source: AnyListen.Player.SourceType | null
+) => {
+  return `${listId}.${source}.${musicInfo.id}`
+}
+const updatedMusicInfos = new Map<
+  string,
+  { musicInfo: AnyListen.Music.MusicInfo; listId: string | null; source: AnyListen.Player.SourceType | null }
+>()
+const updatedMusicPics = new Map<
+  string,
+  { musicInfo: AnyListen.Music.MusicInfo; listId: string | null; source: AnyListen.Player.SourceType | null }
+>()
 const throttleListMusicUpdateSync = throttle(async () => {
-  const targetListId = playerState.playInfo.listId
-  if (prelistId != targetListId) {
-    prelistId = targetListId
-    updatedMusicInfos.clear()
-    return
-  }
-  if (!targetListId) {
-    updatedMusicInfos.clear()
-    return
-  }
-
-  const musicMap = new Map<string, AnyListen.Music.MusicInfo>()
-  for (const m of updatedMusicInfos) musicMap.set(m.id, m)
-  updatedMusicInfos.clear()
   const updatedInfos: AnyListen.Player.PlayMusicInfo[] = []
   for (const m of playerState.playList) {
-    if (!musicMap.has(m.musicInfo.id)) continue
-    const target = musicMap.get(m.musicInfo.id)!
-    updatedInfos.push({
-      ...m,
-      musicInfo: target,
-    })
+    const id = buildMusicInfoMapId(m.musicInfo, m.listId, m.source)
+    const targetInfo = updatedMusicInfos.get(id)
+    if (targetInfo) {
+      updatedInfos.push({
+        ...m,
+        musicInfo: targetInfo.musicInfo,
+      })
+      continue
+    }
+
+    const targetPic = updatedMusicPics.get(id)
+    if (targetPic && (m.musicInfo.meta.picUrl != targetPic.musicInfo.meta.picUrl || m.musicInfo === targetPic.musicInfo)) {
+      m.musicInfo.meta.picUrl = targetPic.musicInfo.meta.picUrl
+      updatedInfos.push(m)
+    }
   }
+  updatedMusicInfos.clear()
+  updatedMusicPics.clear()
   if (!updatedInfos.length) return
   console.log('throttleListSync updatePlayListMusic')
   await updatePlayListMusic(updatedInfos)
@@ -130,14 +142,28 @@ const throttleListMusicUpdateSync = throttle(async () => {
 const handleListInfoUpdateSync = (updateInfo: Map<string, AnyListen.Music.MusicInfo[]>) => {
   const targetListId = playerState.playInfo.listId
   if (!targetListId) return
-  const musics = updateInfo.get(targetListId)
-  if (prelistId != playerState.playInfo.listId) {
-    prelistId = playerState.playInfo.listId
-    updatedMusicInfos.clear()
+  console.log('handleListInfoUpdateSync')
+  for (const [listId, musics] of updateInfo.entries()) {
+    for (const m of musics) {
+      updatedMusicInfos.set(buildMusicInfoMapId(m, listId, playerState.playInfo.source), {
+        musicInfo: m,
+        listId,
+        source: playerState.playInfo.source,
+      })
+    }
   }
-  if (!musics) return
-
-  for (const m of musics) updatedMusicInfos.add(m)
+  throttleListMusicUpdateSync()
+}
+const handleMusicPicUpdateSync = (
+  musicInfo: AnyListen.Music.MusicInfo,
+  listId: string | null = null,
+  source: AnyListen.Player.SourceType | null = null
+) => {
+  updatedMusicPics.set(buildMusicInfoMapId(musicInfo, listId, source), {
+    musicInfo,
+    listId,
+    source,
+  })
   throttleListMusicUpdateSync()
 }
 
@@ -209,6 +235,19 @@ export const initWatchList = () => {
           }
           if (playerState.playInfo.historyIndex == curIdx) return
           updatePlayHistoryIndex(curIdx)
+        })
+      )
+
+      unregistered.add(playerEvent.on('listMusicPicUpdated', handleMusicPicUpdateSync))
+      unregistered.add(
+        extensionEvent.on('resourceListUpdated', (list) => {
+          if (!playerState.playMusicInfo) return
+          if (!playerState.musicInfo.pic && (list.resources.musicPic?.length || list.resources.musicPicSearch?.length)) {
+            void loadImageUrl(playerState.playMusicInfo)
+          }
+          if (!playerState.musicInfo.lrc && (list.resources.musicLyric?.length || list.resources.lyricSearch?.length)) {
+            void loadMusicLyric(playerState.playMusicInfo)
+          }
         })
       )
 

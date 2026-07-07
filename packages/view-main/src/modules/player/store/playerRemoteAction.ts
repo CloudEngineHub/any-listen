@@ -1,7 +1,9 @@
 import { createCache } from '@any-listen/common/cache'
 import { checkPicUrl } from '@any-listen/web'
 
+import { extensionEvent } from '@/modules/extension/store/event'
 import { lyricEvent } from '@/modules/lyric/store/event'
+import { updateListMusic } from '@/modules/musicLibrary/store/actions'
 import { musicLibraryEvent } from '@/modules/musicLibrary/store/event'
 import { settingState } from '@/modules/setting/store/state'
 import { getMusicPic as getMusicPicFromRemote, getMusicUrl as getMusicUrlFromRemote } from '@/shared/ipc/music'
@@ -36,6 +38,11 @@ const picCache = createCache<AnyListen.IPCMusic.MusicPicInfo>()
 const picCacheQueue: string[] = []
 const picRemoteGettingPromises = new Map<string, Promise<AnyListen.IPCMusic.MusicPicInfo>>()
 
+interface GetMusicPicInfo extends AnyListen.IPCMusic.GetMusicPicInfo {
+  listId?: string | null
+  source?: AnyListen.Player.SourceType | null
+}
+
 const handleGetMusicPicFromRemote = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
   const urlInfo = await getMusicPicFromRemote(info)
   if (urlInfo.isFromCache) {
@@ -48,11 +55,18 @@ const handleGetMusicPicFromRemote = async (info: AnyListen.IPCMusic.GetMusicPicI
   return urlInfo
 }
 
-const handleGetMusicPic = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
+const handleGetMusicPic = async (info: GetMusicPicInfo) => {
   // console.log('handleGetMusicPicFromRemote', info.musicInfo.name, info.isRefresh)
   if (picRemoteGettingPromises.has(info.musicInfo.id)) return picRemoteGettingPromises.get(info.musicInfo.id)!
   const promise = handleGetMusicPicFromRemote(info)
     .then((urlInfo) => {
+      if (info.musicInfo.meta.picUrl != urlInfo.url) {
+        info.musicInfo.meta.picUrl = urlInfo.url
+      }
+      if (info.listId && info.source == 'local') {
+        void updateListMusic(info.listId, info.musicInfo)
+      }
+      playerEvent.listMusicPicUpdated(info.musicInfo, info.listId, info.source)
       picCache.set(info.musicInfo.id, urlInfo)
       picCacheQueue.push(info.musicInfo.id)
       if (picCacheQueue.length > 100) {
@@ -76,7 +90,7 @@ const getPicFromCache = (id: string) => {
   return null
 }
 
-export const getMusicPic = async (info: AnyListen.IPCMusic.GetMusicPicInfo): Promise<AnyListen.IPCMusic.MusicPicInfo> => {
+export const getMusicPic = async (info: GetMusicPicInfo): Promise<AnyListen.IPCMusic.MusicPicInfo> => {
   if (!info.isRefresh) {
     const cache = getPicFromCache(info.musicInfo.id)
     if (cache) return cache
@@ -115,7 +129,7 @@ const findUpdatedMusic = (targetId: string, infos: Map<string, AnyListen.Music.M
   }
   return null
 }
-export const getMusicPicDelay = (info: AnyListen.IPCMusic.GetMusicPicInfo, onUrl: (url: string) => void) => {
+export const getMusicPicDelay = (info: GetMusicPicInfo, onUrl: (url: string) => void) => {
   if (!info.isRefresh) {
     const cache = getPicFromCache(info.musicInfo.id)
     if (cache) {
@@ -130,7 +144,13 @@ export const getMusicPicDelay = (info: AnyListen.IPCMusic.GetMusicPicInfo, onUrl
 
   let isCanceled = false
   let lastPicUrl = info.musicInfo.meta.picUrl
-  const _onUrl = (url: string) => {
+  let failed = false
+  const handleOnUrl = (url: string) => {
+    failed = false
+    if (unsubResListChanged) {
+      unsubResListChanged()
+      unsubResListChanged = null
+    }
     lastPicUrl = url
     onUrl(url)
   }
@@ -140,30 +160,47 @@ export const getMusicPicDelay = (info: AnyListen.IPCMusic.GetMusicPicInfo, onUrl
     if (!targetMusic) return
     if (targetMusic.meta.picUrl) {
       if (targetMusic.meta.picUrl == lastPicUrl) return
-      _onUrl(targetMusic.meta.picUrl)
+      handleOnUrl(targetMusic.meta.picUrl)
     } else if (targetMusic.meta.unparsed != info.musicInfo.meta.unparsed) {
       // Metadata has been parsed, fetch the pic again
       void handleGetMusicPic(info).then((urlInfo) => {
         if (isCanceled) return
-        _onUrl(urlInfo.url)
+        handleOnUrl(urlInfo.url)
       })
     }
   })
+  let unsubResListChanged = extensionEvent.on('resourceListUpdated', (list) => {
+    if (isCanceled || !failed || (!list.resources.musicPic?.length && !list.resources.musicPicSearch?.length)) return
+    void handleGetMusicPic(info)
+      .then((urlInfo) => {
+        if (isCanceled) return
+        handleOnUrl(urlInfo.url)
+      })
+      .catch(() => {
+        failed = true
+      })
+  }) as (() => void) | null
   if (info.musicInfo.meta.unparsed) {
     return () => {
       unsub()
+      unsubResListChanged?.()
       isCanceled = true
     }
   }
   let timeout: number | null = setTimeout(() => {
     timeout = null
-    void handleGetMusicPic(info).then((urlInfo) => {
-      if (isCanceled) return
-      _onUrl(urlInfo.url)
-    })
+    void handleGetMusicPic(info)
+      .then((urlInfo) => {
+        if (isCanceled) return
+        handleOnUrl(urlInfo.url)
+      })
+      .catch(() => {
+        failed = true
+      })
   }, 1000)
   return () => {
     unsub()
+    unsubResListChanged?.()
     isCanceled = true
     if (!timeout) return
     clearTimeout(timeout)

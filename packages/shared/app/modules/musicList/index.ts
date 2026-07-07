@@ -171,11 +171,11 @@ export const updateMusicPic = async (listId: string, musicInfo: AnyListen.Music.
   await musicListEvent.list_music_update_pic(listId, musicInfo)
 }
 
-export const updateMusicPicIfNeeded = (musicInfo: AnyListen.Music.MusicInfo, picUrl: string, listId?: string | null) => {
-  if (!listId || !picUrl || musicInfo.meta.picUrl == picUrl) return
-  musicInfo.meta.picUrl = picUrl
-  void updateMusicPic(listId, musicInfo)
-}
+// export const updateMusicPicIfNeeded = ({ listId, source, musicInfo }: AnyListen.IPCMusic.GetMusicPicInfo, picUrl: string) => {
+//   if (!listId || !picUrl || musicInfo.meta.picUrl == picUrl) return
+//   musicInfo.meta.picUrl = picUrl
+//   void updateMusicPic(listId, musicInfo)
+// }
 
 export const updateMusicBaseInfo = async (listId: string, musicInfos: AnyListen.Music.MusicInfo[]) => {
   await musicListEvent.list_music_base_info_update(listId, musicInfos)
