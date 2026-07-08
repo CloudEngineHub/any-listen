@@ -206,18 +206,17 @@ export const loadImageUrl = async (info: AnyListen.Player.PlayMusicInfo, refresh
     })
 }
 export const loadMusicLyric = async (info: AnyListen.Player.PlayMusicInfo) => {
-  void getMusicLyric({ musicInfo: info.musicInfo })
-    .then((lyricInfo) => {
-      if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
-      commit.setMusicInfo({
-        lrc: lyricInfo.info.lyric,
-        tlrc: lyricInfo.info.tlyric,
-        awlrc: lyricInfo.info.awlyric,
-        rlrc: lyricInfo.info.rlyric,
-        rawlrc: lyricInfo.info.rawlrcInfo?.lyric ?? lyricInfo.info.lyric,
-      })
-      playerEvent.lyricUpdated(lyricInfo.info)
+  void getMusicLyric({ musicInfo: info.musicInfo }).then((lyricInfo) => {
+    if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
+    commit.setMusicInfo({
+      lrc: lyricInfo.info.lyric,
+      tlrc: lyricInfo.info.tlyric,
+      awlrc: lyricInfo.info.awlyric,
+      rlrc: lyricInfo.info.rlyric,
+      rawlrc: lyricInfo.info.rawlrcInfo?.lyric ?? lyricInfo.info.lyric,
     })
+    playerEvent.lyricUpdated(lyricInfo.info)
+  })
 }
 const setMetadata = async (info: AnyListen.Player.PlayMusicInfo) => {
   if (info.musicInfo.meta.unparsed) {
@@ -327,6 +326,7 @@ const handlePlayList = async (
       playLater: false,
     })
     await setPlayListMusic({ list: newList, listId, source })
+    commit.setIsLinkedList(true)
     targetPlayMusicInfo = newList.find((m) => m.musicInfo.id == targetMusicInfo.id)
     setPlayMusicInfo(targetPlayMusicInfo!, index)
   }

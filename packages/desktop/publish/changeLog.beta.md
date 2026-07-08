@@ -1,13 +1,13 @@
 <!--- @lang: en-us -->
 
-### Improved
+### Fixed
 
-- Improved song cover loading logic and fixed an issue where cover images were not displayed in some cases ([#225](https://github.com/any-listen/any-listen/issues/225)).
+- Fixed a playlist synchronization issue when playing online lists ([#225](https://github.com/any-listen/any-listen/issues/225)).
 
 ---
 
 <!--- @lang: zh-cn -->
 
-### 优化
+### 修复
 
-- 优化歌曲封面加载逻辑，修复某些情况下封面不显示的问题（[#225](https://github.com/any-listen/any-listen/issues/225)）。
+- 修复播放在线列表时的播放列表同步问题（[#225](https://github.com/any-listen/any-listen/issues/225)）。
