@@ -2,7 +2,7 @@
 
 ### Fixed
 
-- Fixed a playlist synchronization issue when playing online lists ([#225](https://github.com/any-listen/any-listen/issues/225)).
+- Fixed build failures.
 
 ---
 
@@ -10,4 +10,4 @@
 
 ### 修复
 
-- 修复播放在线列表时的播放列表同步问题（[#225](https://github.com/any-listen/any-listen/issues/225)）。
+- 修复构建失败。
