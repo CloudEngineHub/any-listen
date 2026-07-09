@@ -181,9 +181,7 @@ export default class Lyric {
     }
 
     // 如果是逐行歌词，则添加 60ms 的偏移
-    let newOffset = this.isLineMode ? this.offset + 60 : this.offset
-    offset = offset - this.linePlayer.offset + newOffset
-    this.linePlayer.offset = newOffset
+    this.linePlayer.setGlobalOffset(this.isLineMode ? 60 : 0)
     if (isUpdate) this.onUpdateLyric(this._lines)
     else this.onSetLyric(this._lines, offset)
   }
@@ -212,7 +210,7 @@ export default class Lyric {
   }
 
   setOffset(offset) {
-    this.linePlayer.offset = offset
+    this.linePlayer.setOffset(offset)
   }
 
   setLyric(lyric, extendedLyrics) {

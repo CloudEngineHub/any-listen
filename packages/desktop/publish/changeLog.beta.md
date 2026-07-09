@@ -2,7 +2,8 @@
 
 ### Fixed
 
-- Fixed a playlist synchronization issue when playing online lists ([#225](https://github.com/any-listen/any-listen/issues/225)).
+- Fixed an issue where the **Lyric Offset** feature was not functioning correctly.
+- Fixed an issue where the playback speed feature was not functioning correctly.
 
 ---
 
@@ -10,4 +11,5 @@
 
 ### 修复
 
-- 修复播放在线列表时的播放列表同步问题（[#225](https://github.com/any-listen/any-listen/issues/225)）。
+- 修复歌词偏移功能异常的问题。
+- 修复播放速率功能异常的问题。

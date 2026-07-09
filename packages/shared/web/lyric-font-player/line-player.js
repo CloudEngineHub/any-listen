@@ -44,7 +44,7 @@ const parseExtendedLyric = (lrcLinesMap, extendedLyric) => {
 }
 
 export default class LinePlayer {
-  constructor({ offset = 0, rate = 1, onPlay = function () {}, onSetLyric = function () {} } = {}) {
+  constructor({ globalOffset = 0, rate = 1, onPlay = function () {}, onSetLyric = function () {} } = {}) {
     this.tags = {}
     this.lines = []
     this.onPlay = onPlay
@@ -52,7 +52,8 @@ export default class LinePlayer {
     this.isPlay = false
     this.curLineNum = 0
     this.maxLine = 0
-    this.offset = offset
+    this.globalOffset = globalOffset
+    this.offset = 0
     this._performanceTime = 0
     this._startTime = 0
     this._rate = rate
@@ -63,7 +64,7 @@ export default class LinePlayer {
     if (this.extendedLyrics == null) this.extendedLyrics = []
     this._initTag()
     this._initLines()
-    this.onSetLyric(this.lines, this.tags.offset + this.offset)
+    this.onSetLyric(this.lines, this.offset)
   }
 
   _initTag() {
@@ -74,9 +75,10 @@ export default class LinePlayer {
     }
     if (this.tags.offset) {
       let offset = parseInt(this.tags.offset)
-      this.tags.offset = Number.isNaN(offset) ? 0 : offset
+      if (Number.isNaN(offset)) offset = 0
+      this.offset = offset
     } else {
-      this.tags.offset = 0
+      this.offset = 0
     }
   }
 
@@ -129,8 +131,16 @@ export default class LinePlayer {
     this.maxLine = this.lines.length - 1
   }
 
-  _currentTime() {
+  _getOffsetTime() {
+    return this.globalOffset + this.offset
+  }
+
+  _rawCurrentTime() {
     return (getNow() - this._performanceTime) * this._rate + this._startTime
+  }
+
+  _currentTime() {
+    return this._rawCurrentTime() + this._getOffsetTime()
   }
 
   _findCurLineNum(curTime, startIndex = 0) {
@@ -197,7 +207,7 @@ export default class LinePlayer {
     this.pause()
     this.isPlay = true
 
-    this._performanceTime = getNow() - parseInt(this.tags.offset + this.offset)
+    this._performanceTime = getNow()
     this._startTime = curTime
 
     this.curLineNum = this._findCurLineNum(this._currentTime()) - 1
@@ -209,7 +219,7 @@ export default class LinePlayer {
     if (!this.lines.length) return
     this.pause()
 
-    this._performanceTime = getNow() - parseInt(this.tags.offset + this.offset)
+    this._performanceTime = getNow()
     this._startTime = curTime
 
     this.curLineNum = this._findCurLineNum(this._currentTime()) - 1
@@ -230,14 +240,25 @@ export default class LinePlayer {
     }
   }
 
-  replay() {
+  replay(curTime = this._rawCurrentTime()) {
     if (!this.lines.length) return
     if (!this.isPlay) return
-    this.play(this._currentTime())
+    this.play(curTime)
   }
 
   setPlaybackRate(rate) {
+    const currentTime = this._rawCurrentTime()
     this._rate = rate
+    this.replay(currentTime)
+  }
+
+  setOffset(offset) {
+    this.offset = offset
+    this.replay()
+  }
+
+  setGlobalOffset(globalOffset) {
+    this.globalOffset = globalOffset
     this.replay()
   }
 

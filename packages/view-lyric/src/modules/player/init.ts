@@ -16,6 +16,7 @@ import {
   setProgress,
   setStatusText,
 } from './store/actions'
+import { playerEvent } from './store/event'
 
 const init = async (isInited: boolean) => {
   sendCreatedEvent()
@@ -29,6 +30,7 @@ const init = async (isInited: boolean) => {
   setLoadErrorPicUrl(info.loadErrorPicUrl)
   setProgress(info.progress)
   setStatePlaybackRate(info.playbackRate)
+  playerEvent.lyricOffsetUpdated(info.lyricOffset)
   sendInitedEvent()
 }
 

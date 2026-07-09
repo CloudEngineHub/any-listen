@@ -1,3 +1,4 @@
+import { lyricState } from '@/modules/lyric/store/state'
 import { playerState } from '@/modules/player/store/state'
 import { updateSetting } from '@/modules/setting/store/action'
 import { settingState } from '@/modules/setting/store/state'
@@ -28,6 +29,7 @@ export const exposeObj: AnyListen.IPCWinMainActions.IPCWinMainActions = {
       loadErrorPicUrl: playerState.loadErrorPicUrl,
       progress: playerState.progress,
       playbackRate: playerState.playbackRate,
+      lyricOffset: lyricState.offset,
     }
   },
   async playerAction(action) {

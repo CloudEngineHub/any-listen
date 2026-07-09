@@ -33,8 +33,6 @@ const stop = () => {
 const setLyricOffset = (offset: number) => {
   lyric.setOffset(offset)
   setOffset(offset)
-  playerEvent.lyricOffsetUpdated(offset)
-  // console.log('setLyricOffset', offset)
   if (playerState.playerPlaying) setTimeout(play)
   else setTimeout(setTime)
 }

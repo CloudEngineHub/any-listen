@@ -6,7 +6,7 @@ import { settingState } from '@/modules/setting/store/state'
 import { getCurrentTime as getPlayerCurrentTime } from '@/plugins/player'
 import { createUnsubscriptionSet } from '@/shared'
 
-import * as desktopLyric from './desktopLyric'
+// import * as desktopLyric from './desktopLyric'
 import * as lyric from './lyric'
 import { initMacStatusBarLyric } from './macStatusBarLyric'
 import { setOffset } from './store/action'
@@ -20,21 +20,17 @@ const play = () => {
   // if (!musicInfo.lrc) return
   const currentTime = getCurrentTime()
   lyric.play(currentTime)
-  desktopLyric.play(currentTime)
 }
 const pause = () => {
   lyric.pause()
-  desktopLyric.pause()
 }
 
 const stop = () => {
   lyric.stop()
-  desktopLyric.stop()
 }
 
 const setLyricOffset = (offset: number) => {
   lyric.setOffset(offset)
-  desktopLyric.setOffset(offset)
   setOffset(offset)
   playerEvent.lyricOffsetUpdated(offset)
   // console.log('setLyricOffset', offset)
@@ -43,7 +39,6 @@ const setLyricOffset = (offset: number) => {
 
 const setPlaybackRate = (rate: number) => {
   lyric.setPlaybackRate(rate)
-  desktopLyric.setPlaybackRate(rate)
 
   if (playerState.playerPlaying) setTimeout(play)
 }
@@ -67,12 +62,6 @@ const setLyric = () => {
         : playerState.musicInfo.lrc,
       extendedLyrics
     )
-    desktopLyric.setLyric({
-      lrc: playerState.musicInfo.lrc,
-      tlrc: playerState.musicInfo.tlrc,
-      rlrc: playerState.musicInfo.rlrc,
-      awlrc: playerState.musicInfo.awlrc,
-    })
   }
 
   if (playerState.playerPlaying) setTimeout(play)
@@ -93,7 +82,6 @@ export const initLyric = () => {
   settingEvent.on('inited', () => {
     unregistered.register((subscriptions) => {
       subscriptions.add(lyric.initLyric())
-      subscriptions.add(desktopLyric.initDesktopLyric())
       if (import.meta.env.VITE_IS_MAC) subscriptions.add(initMacStatusBarLyric()) // 需在 initTitleLyric 之前初始化
       subscriptions.add(initTitleLyric())
       subscriptions.add(playerEvent.on('lyricUpdated', setLyric))
@@ -102,12 +90,6 @@ export const initLyric = () => {
       subscriptions.add(
         settingEvent.on('updated', (keys) => {
           if (watchSettings.some((k) => keys.includes(k))) setLyric()
-        })
-      )
-      subscriptions.add(
-        playerEvent.on('musicChanged', () => {
-          stop()
-          desktopLyric.sendMusicInfo(playerState.progress.nowPlayTime * 1000)
         })
       )
       subscriptions.add(playerEvent.on('play', play))

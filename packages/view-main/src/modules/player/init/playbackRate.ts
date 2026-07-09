@@ -71,6 +71,7 @@ export const initPlaybackRate = () => {
     })
 
     setPlaybackRate(settingState.setting['player.playbackRate'])
+    setStatePlaybackRate(settingState.setting['player.playbackRate'])
     setPreservesPitch(settingState.setting['player.preservesPitch'])
   })
 }

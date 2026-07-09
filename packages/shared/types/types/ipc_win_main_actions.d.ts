@@ -21,6 +21,7 @@ declare namespace AnyListen {
         statusText: string
         playbackRate: number
         loadErrorPicUrl: string
+        lyricOffset: number
       }
 
       playerAction: (action: IPCPlayer.ActionPlayer) => void
