@@ -27,7 +27,7 @@ const dirs = {
   },
   web: {
     publicDir: path.join(rootPath, 'packages/web-server/server/public'),
-    outDir: path.join(rootPath, 'build/public'),
+    outDir: path.join(rootPath, 'build/public/lyric'),
   },
 }
 
