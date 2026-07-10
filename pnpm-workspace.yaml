@@ -6,7 +6,7 @@ packages:
 
 allowBuilds:
   better-sqlite3: true
-  svelte-preprocess: true
+  svelte-preprocess: false
   electron: false
   electron-winstaller: false
   esbuild: false
