@@ -66,6 +66,7 @@ const assetsAll = {
 } as const
 
 export default async (type: Target) => {
+  if (process.env.SKIP_ASSET_COPY) return
   const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev'
   const assets = assetsAll[type][env]
   for (const info of assets) {
