@@ -28,6 +28,7 @@ ENV IS_CI=${IS_CI}
 ENV CI=${IS_CI}
 ENV GIT_COMMIT_ID=${GIT_COMMIT_ID}
 ENV GIT_COMMIT_DATE="${GIT_COMMIT_DATE}"
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 RUN pnpm build:web
 
