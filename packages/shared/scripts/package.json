@@ -1,6 +1,5 @@
 {
   "name": "@shared/scripts",
-  "type": "module",
   "scripts": {
     "pack:win:setup:x64": "pnpm -F desktop pack:win:setup:x64",
     "pack:win:setup:arm64": "pnpm -F desktop pack:win:setup:arm64",
