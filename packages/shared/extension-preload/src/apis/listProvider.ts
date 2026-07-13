@@ -1,7 +1,7 @@
 import { verifyOnlineMusicArray } from './resource'
 
 let actions: Partial<AnyListen.IPCExtension.ListProviderAction>
-export const registerResourceAction = (_actions: Partial<AnyListen_API.ListProviderAction>) => {
+export const registerListProviderAction = (_actions: Partial<AnyListen_API.ListProviderAction>) => {
   actions = _actions
 }
 

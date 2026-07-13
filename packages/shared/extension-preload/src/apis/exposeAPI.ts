@@ -10,6 +10,7 @@ import { dataConverter } from './dataConverter'
 import { env } from './env'
 import { iconv } from './iconv'
 import { createIsolateContext } from './isolateContext'
+import { registerListProviderAction } from './listProvider'
 import { logcat } from './logcat'
 // import { musicList } from './musicList'
 import { musicUtils } from './musicUtils'
@@ -30,6 +31,7 @@ export const getAPI = () => {
     configuration,
     musicUtils,
     registerResourceAction,
+    registerListProviderAction,
     command,
     constants,
     utils: {
@@ -57,10 +59,10 @@ export const getAPI = () => {
         // extensionAPI.player = player
         break
       case 'isolate_context':
-        extensionAPI.utils!.createIsolateContext = createIsolateContext
+        extensionAPI.utils.createIsolateContext = createIsolateContext
         break
     }
   }
-  return extensionAPI as AnyListen_API.API
+  return extensionAPI
   // console.log('Preload finished.')
 }

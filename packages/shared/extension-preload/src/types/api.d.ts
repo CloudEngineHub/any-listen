@@ -1199,6 +1199,7 @@ declare global {
       storage: Storage
       configuration: Configuration
       registerResourceAction: (actions: Partial<ResourceAction>) => void
+      registerListProviderAction: (actions: Partial<ListProviderAction>) => void
       // TODO
       // backup: {
       //   runBackup: (opts: { backupData?: Array<'list' | 'dislike'> }) => Promise<void>
