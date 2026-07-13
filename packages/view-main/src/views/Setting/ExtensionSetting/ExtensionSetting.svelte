@@ -26,13 +26,13 @@
               ss.enumName = ss.enumName.map((n) => extI18n.t(extension.id, n))
               break
             case 'configCheckbox':
-              if (ss.actionCommands) ss.actionCommands = ss.actionCommands.map((n) => `${extension.id}.${n}`)
-              if (ss.actionCommandNames) ss.actionCommandNames = ss.actionCommandNames.map((n) => extI18n.t(extension.id, n))
+              ss.actionCommands &&= ss.actionCommands.map((n) => `${extension.id}.${n}`)
+              ss.actionCommandNames &&= ss.actionCommandNames.map((n) => extI18n.t(extension.id, n))
               break
             case 'configCheckboxMultiple':
-              if (ss.value == null) ss.value = []
-              if (ss.actionCommands) ss.actionCommands = ss.actionCommands.map((n) => `${extension.id}.${n}`)
-              if (ss.actionCommandNames) ss.actionCommandNames = ss.actionCommandNames.map((n) => extI18n.t(extension.id, n))
+              ss.value ??= []
+              ss.actionCommands &&= ss.actionCommands.map((n) => `${extension.id}.${n}`)
+              ss.actionCommandNames &&= ss.actionCommandNames.map((n) => extI18n.t(extension.id, n))
               break
             default:
               break

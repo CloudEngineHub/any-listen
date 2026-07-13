@@ -6,7 +6,7 @@ import timers from 'node:timers/promises'
 import { pathToFileURL } from 'node:url'
 import { gunzip, gzip } from 'node:zlib'
 
-import { NATIVE_VERSION } from '@any-listen/common/constants'
+import { CONFIG_FILE_EXT, NATIVE_VERSION } from '@any-listen/common/constants'
 
 // 重命名 process 防止 vite 转换
 export const nodeProcess = process
@@ -156,7 +156,7 @@ export const gunzipData = async (buf: Buffer): Promise<string> => {
  * @param data 数据
  */
 export const saveAnyListenConfigFile = async (path: string, data: unknown) => {
-  if (!path.endsWith('.alc')) path += '.alc'
+  if (!path.endsWith(CONFIG_FILE_EXT)) path += CONFIG_FILE_EXT
   fs.writeFile(path, await gzipData(JSON.stringify(data)), 'binary', (err) => {
     console.log(err)
   })

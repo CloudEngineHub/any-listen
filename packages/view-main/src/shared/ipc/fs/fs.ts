@@ -31,3 +31,13 @@ export const rename = async (path: string, newPath: string) => {
     },
   })
 }
+
+export const createDir = async (path: string, name: string) => {
+  return ipc.fileSystemAction<'create_dir'>({
+    action: 'create_dir',
+    data: {
+      path,
+      name,
+    },
+  })
+}

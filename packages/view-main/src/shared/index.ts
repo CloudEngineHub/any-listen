@@ -51,7 +51,7 @@ export const parseInterval = (intvStr: string | null) => {
  */
 export const setTitle = (title: string | null) => {
   let domTitle = document.getElementsByTagName('title')[0]
-  title ||= i18n.t('anylisten')
+  title ||= i18n.t('app_name')
   domTitle.innerText = title
 }
 

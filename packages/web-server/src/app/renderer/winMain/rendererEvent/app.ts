@@ -77,35 +77,31 @@ export const createServerApp = () => {
   return {
     async settingChanged(keys, setting) {
       broadcast((socket) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (socket.winType != 'main' || !socket.isInited) return
         void socket.remote.settingChanged(keys, setting)
       })
     },
     async deeplink(deeplink) {
       broadcast((socket) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (socket.winType != 'main' || !socket.isInited) return
         void socket.remote.deeplink(deeplink)
       })
     },
-    async createDesktopLyricProcess(action) {
-      // TODO
-      // broadcast((socket) => {
-      //   if (socket.winType != 'main' || !socket.isInited) return
-      //   socket.remoteQueuePlayer.playerAction(action)
-      // })
-    },
+    // async createDesktopLyricProcess(action) {
+    //   // TODO
+    //   // broadcast((socket) => {
+    //   //   if (socket.winType != 'main' || !socket.isInited) return
+    //   //   socket.remoteQueuePlayer.playerAction(action)
+    //   // })
+    // },
     async closeMessageBox(key) {
       broadcast((socket) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (socket.winType != 'main' || !socket.isInited) return
         void socket.remote.closeMessageBox(key)
       })
     },
     async updateInfo(info) {
       broadcast((socket) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (socket.winType != 'main' || !socket.isInited) return
         void socket.remote.updateInfo(info)
       })

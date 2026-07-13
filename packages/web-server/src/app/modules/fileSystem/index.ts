@@ -6,6 +6,7 @@ import { buildPublicPath } from '@any-listen/common/tools'
 import { extname, joinPath, normalizePath, toSha256 } from '@any-listen/nodejs'
 
 import { appState } from '@/app/app/state'
+import { filterFileName } from '@/app/shared/utils'
 import { PUBLIC_RESOURCE_PATH } from '@/shared/constants'
 
 const devHost = 'http://localhost:9500'
@@ -111,6 +112,15 @@ const rename = async (filePath: string, newPath: string) => {
   await fs.rename(filePath, newPath)
 }
 
+const createDir = async (filePath: string, name: string) => {
+  checkAllowPathError(filePath)
+  name = filterFileName(name)
+  if (!name) throw new Error('Invalid folder name')
+  const newPath = joinPath(filePath, name)
+  await fs.mkdir(newPath)
+  return newPath
+}
+
 export const fileSystemAction = async <T extends keyof AnyListen.FileSystem.Actions>(
   action: AnyListen.FileSystem.Actions[T][0]
 ): Promise<AnyListen.FileSystem.Actions[T][1]> => {
@@ -121,6 +131,10 @@ export const fileSystemAction = async <T extends keyof AnyListen.FileSystem.Acti
       return readDir(action.data.path, action.data.isDirOnly, action.data.fileFilter)
     case 'rename':
       await rename(action.data.path, action.data.newPath)
+      break
+    case 'create_dir':
+      checkAllowPathError(action.data.path)
+      return createDir(action.data.path, action.data.name)
     // default:
     //   break
   }

@@ -4,8 +4,8 @@ import { showNotifyBox } from '@/components/apis/notify'
 import { extI18n } from '@/modules/extension/i18n'
 import { extensionState } from '@/modules/extension/store/state'
 
-import { showOpenDialog } from '.'
-import { showFileSelectModal } from '../fs/fileSelectModal'
+import { showOpenDialog, showSaveDialog } from '.'
+import { showFileSaveModal, showFileSelectModal } from '../fs/fileSelectModal'
 import { closeMessageBoxEvent, deeplinkEvent, settingChangedEvent, updateInfoEvent, winShowEvent } from './event'
 
 export default {
@@ -25,10 +25,14 @@ export default {
     return showNotifyBox(extId, key, options)
   },
   async showInputBox(key, extId, options, validateInput) {
-    return showInputBox(extId, key, {
-      ...options,
-      validateInput,
-    })
+    return showInputBox(
+      {
+        ...options,
+        validateInput,
+      },
+      key,
+      extId
+    )
       .then((result) => {
         console.log('result', result)
         return result
@@ -76,23 +80,23 @@ export default {
   async showSaveBox(key, extId, options) {
     let ext = extensionState.extensionList.find((ext) => ext.id === extId)
     const extName = ext ? extI18n.t(extId, ext.name) : ''
-    let result: AnyListen.OpenDialogResult = { canceled: true, filePaths: [] }
+    let result: AnyListen.SaveDialogResult = { canceled: true, filePath: '' }
     if (import.meta.env.VITE_IS_WEB) {
-      result = await showFileSelectModal({
+      result = await showFileSaveModal({
         modalTitle: extName,
         title: options.title,
-        properties: ['openDirectory'],
         buttonLabel: options.saveLabel,
+        defaultFileName: options.defaultFileName,
       })
     }
     if (import.meta.env.VITE_IS_DESKTOP) {
-      result = await showOpenDialog({
+      result = await showSaveDialog({
         title: `${options.title} (${extName})`,
-        properties: ['openDirectory'],
+        defaultFileName: options.defaultFileName,
         buttonLabel: options.saveLabel,
       })
     }
-    return result.canceled || result.filePaths.length === 0 ? '' : result.filePaths[0]
+    return result.canceled || !result.filePath ? '' : result.filePath
   },
   async closeMessageBox(key) {
     closeMessageBoxEvent.emit(key)

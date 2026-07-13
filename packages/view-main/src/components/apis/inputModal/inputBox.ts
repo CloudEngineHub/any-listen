@@ -6,9 +6,9 @@ import { closeMessageBoxEvent } from '@/shared/ipc/app/event'
 import App from './App.svelte'
 
 export const showInputBox = async (
-  extId: string,
-  key: string,
-  options: AnyListen.IPCCommon.InputDialogOptions
+  options: AnyListen.IPCCommon.InputDialogOptions,
+  key?: string,
+  extId?: string
 ): Promise<string> => {
   const app = mount(App, {
     target: document.getElementById('root')!,
@@ -24,12 +24,14 @@ export const showInputBox = async (
     unsub2()
   }
   const unsub = onDesconnected(release)
-  const unsub2 = closeMessageBoxEvent.on((_key) => {
-    if (key != _key) return
-    release()
-  })
+  const unsub2 = key
+    ? closeMessageBoxEvent.on((_key) => {
+        if (key != _key) return
+        release()
+      })
+    : () => {}
   await tick()
-  return (app.show(extId, options) as Promise<string>).finally(() => {
+  return (app.show(options, extId) as Promise<string>).finally(() => {
     key = ''
     unsub()
     unsub2()

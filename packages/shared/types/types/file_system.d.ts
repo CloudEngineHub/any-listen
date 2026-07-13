@@ -31,10 +31,18 @@ declare namespace AnyListen {
       },
       undefined,
     ]
+    type CreateDir = [
+      {
+        path: string
+        name: string
+      },
+      string,
+    ]
     interface Actions {
       read_root_dir: IPCReturnAction<'read_root_dir', File[]>
       read_dir: IPCReturnAction<'read_dir', ReadDir[1], ReadDir[0]>
       rename: IPCReturnAction<'rename', Move[1], Move[0]>
+      create_dir: IPCReturnAction<'create_dir', CreateDir[1], CreateDir[0]>
     }
   }
 }

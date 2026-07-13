@@ -92,7 +92,7 @@ declare global {
 
       interface SaveDialogOptions {
         /** The resource the dialog shows when opened. */
-        defaultPath?: string
+        defaultFileName?: string
         /** A human-readable string for the save button. */
         saveLabel?: string
         /**

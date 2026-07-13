@@ -1,4 +1,4 @@
-import { showFileSelectModal } from '../fs/fileSelectModal'
+import { showFileSaveModal, showFileSelectModal } from '../fs/fileSelectModal'
 import { ipc } from '../ipc'
 
 export const getMachineId: AnyListen.IPC.ServerIPC['getMachineId'] = async () => {
@@ -42,6 +42,10 @@ export const showOpenDialog: AnyListen.IPC.ServerIPC['showOpenDialog'] = async (
   return ipc.showOpenDialog(opts)
 }
 export const showSaveDialog: AnyListen.IPC.ServerIPC['showSaveDialog'] = async (opts) => {
+  if (import.meta.env.VITE_IS_WEB) {
+    return showFileSaveModal(opts)
+  }
+  if (opts.defaultFileName) opts.defaultPath = opts.defaultFileName
   return ipc.showSaveDialog(opts)
 }
 export const openDirInExplorer: AnyListen.IPC.ServerIPC['openDirInExplorer'] = async (path) => {

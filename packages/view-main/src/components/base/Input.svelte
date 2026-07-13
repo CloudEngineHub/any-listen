@@ -20,6 +20,7 @@
     onblur = () => {},
     autofocus = false,
     class: className,
+    autoflex = false,
   }: {
     id?: string
     class?: string
@@ -33,6 +34,7 @@
     stopcontenteventpropagation?: boolean
     autopaste?: boolean
     autofocus?: boolean
+    autoflex?: boolean
     onbeforechange?: (val: string) => string
     onchange?: (val: string) => void
     onsubmit?: (val: string) => void
@@ -95,7 +97,7 @@
 
 <input
   bind:this={domInput}
-  class={['input', className, { min }]}
+  class={['input', className, { min, autoflex }]}
   {id}
   {type}
   {placeholder}
@@ -153,5 +155,9 @@
   .min {
     padding: 3px 8px;
     font-size: 12px;
+  }
+
+  .autoflex {
+    flex: auto;
   }
 </style>

@@ -54,8 +54,10 @@ declare global {
       filePaths: string[]
     }
     interface SaveDialogOptions {
+      modalTitle?: string
       title: string
       defaultPath?: string
+      defaultFileName?: string
       buttonLabel?: string
       filters?: FileFilter[]
       properties?: Array<

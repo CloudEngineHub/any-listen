@@ -231,3 +231,5 @@ export const PROXY_URL_PATH = '/p_url'
 export const PROXY_URL_KEY_COOKIE_NAME = 'p_urlkey'
 
 export const CANCELED_ERROR_MSG = 'canceled'
+
+export const CONFIG_FILE_EXT = '.alcfg'

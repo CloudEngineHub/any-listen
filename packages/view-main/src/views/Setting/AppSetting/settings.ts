@@ -31,7 +31,7 @@ interface SettingHr {
   name: keyof Message
 }
 export interface SettingListComponentItem {
-  name: keyof Message
+  name?: keyof Message
   id?: string
   description?: keyof Message
   type: 'component'

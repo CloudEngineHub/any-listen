@@ -46,9 +46,9 @@
   const handleAfterLeave = () => {
     onafterleave?.()
   }
-  export const show = async (_extId: string, _options: AnyListen.IPCCommon.InputDialogOptions) => {
-    extId = _extId
+  export const show = async (_options: AnyListen.IPCCommon.InputDialogOptions, _extId: string) => {
     options = _options
+    extId = _extId
     value = _options.value || ''
     visible = true
     return new Promise<string>((resolve, reject) => {

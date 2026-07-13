@@ -14,6 +14,17 @@ export interface FileExplorerOptions {
   onReadRootDir: (refresh?: boolean) => Promise<AnyListen.FileSystem.File[]>
   onReadDir: (path: string, refresh?: boolean) => Promise<AnyListen.FileSystem.File[]>
 }
+export interface FileSaveOptions {
+  modalTitle?: string
+  title: string
+  defaultPath?: string
+  defaultFileName?: string
+  filters?: string[]
+  confirmText?: string
+  onReadRootDir: (refresh?: boolean) => Promise<AnyListen.FileSystem.File[]>
+  onReadDir: (path: string, refresh?: boolean) => Promise<AnyListen.FileSystem.File[]>
+  onCreateDir: (path: string, name: string) => Promise<string>
+}
 
 // const sep = appState.os == 'windows' ? '\\' : '/'
 const sepRxp = /\\|\//
@@ -40,7 +51,7 @@ export const getParentDir = (dir: string, rootDirs: AnyListen.FileSystem.File[])
   }
   return ''
 }
-export const buildFilesPath = (curDir: string, files: AnyListen.FileSystem.File[]) => {
+export const buildFilesPath = (curDir: string, files: Array<{ name: string }>) => {
   if (!curDir) return files.map((f) => f.name)
   const sep = getSep(curDir)
   if (curDir.endsWith(sep)) curDir = curDir.substring(0, curDir.length - 1)
