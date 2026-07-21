@@ -1,4 +1,5 @@
 import { SPLIT_CHAR } from '@any-listen/common/constants'
+import { toMD5 } from '@any-listen/nodejs'
 
 import { inertDislikeList, overwirteDislikeList, queryDislikeList } from './dbHelper'
 import type { DislikeInfo } from './statements'
@@ -64,6 +65,22 @@ const initDislikeList = (): AnyListen.Dislike.DislikeInfo => {
 export const getDislikeListInfo = (): AnyListen.Dislike.DislikeInfo => {
   // if (!dislikeInfo) initDislikeList()
   return initDislikeList()
+}
+
+/**
+ * 获取不喜欢列表规则
+ * @returns 不喜欢列表规则
+ */
+export const getDislikeRules = () => {
+  return getDislikeListInfo().rules
+}
+
+/**
+ * 获取不喜欢列表规则的MD5值
+ * @returns 不喜欢列表规则的MD5值
+ */
+export const getDislikeRulesMD5 = () => {
+  return toMD5(getDislikeListInfo().rules)
 }
 
 /**

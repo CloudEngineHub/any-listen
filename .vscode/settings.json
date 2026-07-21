@@ -26,40 +26,49 @@
   "i18n-ally.review.gutters": false,
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "text": "Generate exactly one commit subject line using Conventional Commits: <type>(<optional-scope>): <description>."
+      "text": "Generate exactly one Conventional Commit subject in the format: <type>(<optional-scope>): <description>."
     },
     {
-      "text": "Use English only."
+      "text": "Use English only. Output the subject only—no body, footer, quotes, markdown, or code block."
     },
     {
       "text": "Allowed types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert."
     },
     {
-      "text": "Keep the subject concise: 8-14 words, present tense, no ending period."
+      "text": "Use present tense. Keep the description concise (8-14 words) and do not end with a period."
     },
     {
-      "text": "Describe only observable code/config/file changes; do not explain intent, impact, or motivation."
+      "text": "Describe only observable code, configuration, or file changes. Do not mention intent, motivation, benefits, or impact."
     },
     {
-      "text": "Mention 1-2 most important changes only; avoid long lists and filler words."
+      "text": "Focus on the 1-2 most significant changes. Avoid filler words, vague adjectives, and long enumerations."
     },
     {
-      "text": "If scope is clear, include it (for example: feat(shared): ..., fix(desktop): ...)."
+      "text": "Include a scope only when it is obvious from the changes."
     },
     {
-      "text": "If CHANGELOG.md or changelog files are updated, align wording with their updated entry."
+      "text": "If CHANGELOG.md or any changelog file is updated, match the wording of its corresponding entry."
     },
     {
-      "text": "If changelog entries include issue links, append the related issue number reference in subject (for example: (#123))."
+      "text": "If the matching changelog entry references an issue, append the issue reference at the end (for example: (#123))."
     },
     {
-      "text": "Output subject only. No body, no footer, no code block, no quotes."
+      "text": "Example: feat: add SingleEvent and update event API"
     },
     {
-      "text": "Good: feat(shared): add SingleEvent and update event API"
+      "text": "Counterexample: feat: add event handling improvements for better management and future extensibility"
     },
     {
-      "text": "Bad: feat: add event handling improvements for better management and future extensibility"
+      "text": "Prefer strong action verbs such as add, remove, update, rename, fix, refactor, optimize, simplify, and replace."
+    },
+    {
+      "text": "Do not mention implementation details unless they are the primary change."
+    },
+    {
+      "text": "Avoid generic words such as improve, enhance, adjust, update code, and miscellaneous unless they accurately describe the actual change."
+    },
+    {
+      "text": "Prefer singular nouns and concise technical terms over verbose phrases."
     }
   ]
 }

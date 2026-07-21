@@ -4,6 +4,7 @@ import extension from './extension/remote'
 import hotkey from './hotkey/remote'
 import list from './list/remote'
 import player from './player/remote'
+import sync from './sync/remote'
 import theme from './theme/remote'
 
 let connectIPCService: AnyListen.IPC.ConnectIPCSrivice | null
@@ -29,6 +30,7 @@ export const connectIPC = (
     ...list,
     ...player,
     ...theme,
+    ...sync,
   }
   connectIPCService({
     clientCall: exposeFuncs,

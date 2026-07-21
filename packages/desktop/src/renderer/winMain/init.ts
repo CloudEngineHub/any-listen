@@ -10,6 +10,7 @@ import { appEvent } from '@/app'
 import { extensionEvent } from '@/modules/extension'
 import { hotKeyEvent, hotKeyState } from '@/modules/hotKey'
 import { playerEvent } from '@/modules/player'
+import { onWebDAVSyncStatusChanged } from '@/modules/sync'
 import { themeEvent } from '@/modules/theme'
 import { initMainWindowHandler as initMainWindowHandlerTray } from '@/modules/tray'
 
@@ -111,6 +112,9 @@ export const initWinMain = () => {
   })
   playerEvent.on('collectStatus', (status) => {
     void rendererIPC.playerAction({ action: 'collectStatus', data: status })
+  })
+  onWebDAVSyncStatusChanged((state) => {
+    void rendererIPC.webdavSyncStatus(state)
   })
 
   // initUpdate()

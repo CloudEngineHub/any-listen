@@ -197,7 +197,6 @@ export const registerListAction = () => {
         musicLibraryEvent.anyListChanged([
           action.data.defaultList.id,
           action.data.loveList.id,
-          action.data.lastPlayList.id,
           ...action.data.userList.map((i) => i.id),
         ] satisfies string[])
         break

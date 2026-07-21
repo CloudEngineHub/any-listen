@@ -5,11 +5,13 @@
     name,
     desc,
     checked,
+    disabled,
     onchange,
   }: {
     id: string
     name: string
     desc?: string
+    disabled?: boolean
     checked: boolean
     onchange: (checked: boolean) => void
   } = $props()
@@ -17,7 +19,7 @@
 </script>
 
 <div class="settings-item-checkbox">
-  <Checkbox label={name} {id} {checked} {onchange} />
+  <Checkbox label={name} {id} {checked} {onchange} {disabled} />
   {#if desc}
     <p class="settings-item-desc">{desc}</p>
   {/if}

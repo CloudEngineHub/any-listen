@@ -153,6 +153,7 @@ export const syncList = async (list: AnyListen.List.RemoteListInfo) => {
         },
       })
     : { musics: [], waitingParseMetadata: false }
+  let updated = false
   if (removedMusicIds.size) {
     await sendMusicListAction({
       action: 'list_music_remove',
@@ -162,6 +163,7 @@ export const syncList = async (list: AnyListen.List.RemoteListInfo) => {
         sync: true,
       },
     })
+    updated ||= true
   }
   if (newMusics.length) {
     const addMusicLocationType = getSettings()['list.addMusicLocationType']
@@ -176,11 +178,30 @@ export const syncList = async (list: AnyListen.List.RemoteListInfo) => {
     if (waitingParseMetadata && list.meta.lazzyParseMeta !== true) {
       await handleMusicsParseBatch(list.meta.extensionId, list.meta.source, list.id, newMusics)
     }
+    updated ||= true
   }
   if (list.meta.lazzyParseMeta !== true) {
     const unparsedMusics = musics.filter((m) => m.meta.unparsed) as AnyListen.Music.MusicInfoOnline[]
     if (!unparsedMusics.length) return
     await handleMusicsParseBatch(list.meta.extensionId, list.meta.source, list.id, unparsedMusics)
+    updated ||= true
+  }
+  if (updated) {
+    await sendMusicListAction({
+      action: 'list_update',
+      data: {
+        lists: [
+          {
+            ...list,
+            meta: {
+              ...list.meta,
+              syncTime: Date.now(),
+            },
+          },
+        ],
+        sync: true,
+      },
+    })
   }
 }
 const handleSyncList = async () => {

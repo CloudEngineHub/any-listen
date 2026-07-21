@@ -21,8 +21,8 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   openUrl: (url: string) => void
   setSystemThemeMode: (isDark: boolean) => void
 
-  /** 获取机器ID */
-  getMachineId: () => string
+  /** 获取应用信息 */
+  getAppInfo: () => { machineId: string; proxyServerHost: string }
   /** 获取配置 */
   getSetting: () => AnyListen.AppSetting
   /** 更新配置 */

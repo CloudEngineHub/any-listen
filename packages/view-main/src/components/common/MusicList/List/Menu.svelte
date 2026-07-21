@@ -7,12 +7,15 @@
   import type { MenuSelectInfo } from '../type'
   import { showMusicAddModal } from '@/components/apis/musicAddModal'
   import { showMusicCommentModal } from '@/components/apis/musicCommentModal'
+  import { appState } from '@/modules/app/store/state'
   let {
     source,
+    deviceid,
     onplay,
     onhide,
   }: {
     source: AnyListen.Player.SourceType
+    deviceid: string | null
     onplay: (musicInfo: AnyListen.Music.MusicInfo) => Promise<void>
     onhide?: () => void
   } = $props()
@@ -43,12 +46,14 @@
     // let download = assertApiSupport(musicInfo.source) && musicInfo.source != 'local'
     let dislike = hasDislike(selectInfo.musicInfo)
     const local = source === 'local'
+    const localList = deviceid != null
+    const notLocalList = localList && deviceid != appState.machineId
     const newMenu: Array<MenuList<MenuType>[number] | false> = [
       { action: 'play', label: $t('user_list_music_menu__play') },
       { action: 'playLater', label: $t('user_list_music_menu__play_later') },
       // { action: 'download', label: $t('user_list_music_menu__download') },
       { action: 'addTo', label: $t('user_list_music_menu__add_to') },
-      local && { action: 'moveTo', label: $t('user_list_music_menu__move_to') },
+      local && !localList && { action: 'moveTo', label: $t('user_list_music_menu__move_to') },
       // { action: 'sort', label: $t('user_list_music_menu__sort') },
       null,
       { action: 'comment', label: $t('user_list_music_menu__comment') },
@@ -56,7 +61,7 @@
       // { action: 'detail', label: $t('user_list_music_menu__detail') },
       null,
       { action: 'dislike', disabled: dislike, label: $t('user_list_music_menu__dislike') },
-      local && { action: 'remove', label: $t('user_list_music_menu__remove') },
+      local && { action: 'remove', disabled: notLocalList, label: $t('user_list_music_menu__remove') },
     ]
     if (import.meta.env.VITE_IS_DESKTOP) {
       if (selectInfo.musicInfo.isLocal) {

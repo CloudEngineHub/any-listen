@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { QUALITYS } from '@any-listen/common/constants'
+import { VIRTUAL_PROTOCOL } from '@any-listen/common/tools'
 
 import type { ListCommonResult } from '@/types/api'
 
@@ -208,10 +209,11 @@ const verifyListCommonResult = <T>(result: ListCommonResult<T>, name: string): L
   return result
 }
 const urlRxp = /^(?:(?:https?|file):\/\/\S+|(?:\.{0,2})\/(?!\/)\S*)$/
+const proxyUrlRxp = new RegExp(`^${VIRTUAL_PROTOCOL}`)
 const verifyUrl = (url: string, name: string) => {
   if (typeof url != 'string') throw new Error(withErrorReason(`${name} url result is not a string`, url))
   if (url.length > 2048) throw new Error(withErrorReason(`${name} url is too long`, url, `length=${url.length}`))
-  if (!urlRxp.test(url)) throw new Error(withErrorReason(`${name} url is not a valid url`, url))
+  if (!urlRxp.test(url) && !proxyUrlRxp.test(url)) throw new Error(withErrorReason(`${name} url is not a valid url`, url))
 }
 const verifyQuality = (quality: string) => {
   if (typeof quality != 'string') throw new Error(withErrorReason('quality is not a string', quality))

@@ -73,5 +73,5 @@ export const initProxyServer = async () => {
     return createProxyServer()
   })
   console.log('Proxy server running at', proxyHost)
-  void initProxyServerState(`${proxyHost}${PROXY_SERVER_PATH}`, appState.cacheDataPath)
+  void initProxyServerState(proxyHost, PROXY_SERVER_PATH, appState.cacheDataPath)
 }

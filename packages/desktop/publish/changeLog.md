@@ -3,6 +3,7 @@
 ### Added
 
 - Added a **Track Number** sorting option for song lists ([#152](https://github.com/any-listen/any-listen/issues/152)).
+- Added a **Data Sync** feature with support for syncing data to WebDAV, available under _Settings > Data Sync_.
 - Added **Classic Lyrics** mode for Desktop Lyrics.
 - Added **Desktop Lyrics** controls to the **Tray Menu**.
 
@@ -29,6 +30,7 @@
 ### 新增
 
 - 新增歌曲列表排序方式 **「按曲目编号」** 选项（[#152](https://github.com/any-listen/any-listen/issues/152)）。
+- 新增 **「数据同步」** 功能，支持将数据同步到 WebDAV，可在 _设置 > 数据同步_ 中使用。
 - 桌面歌词新增 **「经典歌词」** 模式。
 - 在 **「托盘菜单」** 中新增 **「桌面歌词」** 相关控制。
 

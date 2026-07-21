@@ -15,6 +15,7 @@ import { createClientPlayer, createExposePlayer } from './player'
 import { createClientResource } from './resource'
 import './env'
 import { createClientSoundEffect } from './soundEffect'
+import { createClientSync, createExposeSync } from './sync'
 import { createClientTheme, createExposeTheme } from './theme'
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
@@ -49,6 +50,7 @@ const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = ({ onConnected, clien
     ...createExposeDislike(clientCall),
     ...createExposeTheme(clientCall),
     ...createExposeExtension(clientCall),
+    ...createExposeSync(clientCall),
   }
   const mainCallUtil = createMainCall<AnyListen.IPC.ServerIPC>(IPC_NAMES.VIEW_MAIN, exposeObj)
   const mainCall = mainCallUtil.remote
@@ -65,6 +67,7 @@ const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = ({ onConnected, clien
     ...createClientTheme(mainCall),
     ...createClientExtension(mainCall),
     ...createClientSoundEffect(mainCall),
+    ...createClientSync(mainCall),
   }
   onConnected(ipc as AnyListen.IPC.ServerIPC)
 }

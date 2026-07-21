@@ -15,6 +15,7 @@
   import Empty from '@/components/material/Empty.svelte'
   import ListSortModal from './components/ListSortModal.svelte'
   import { appEvent } from '@/modules/app/store/event'
+  import { getListMetaInfo } from '../shared'
 
   let {
     source,
@@ -181,20 +182,14 @@
               select.handleSelect(index)
             } else {
               select.setSelectIndex(index)
-              void musicClick(list, listinfo.id, item, source, {
-                ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-              })
+              void musicClick(list, listinfo.id, item, source, getListMetaInfo(listinfo))
               if (isKey) {
-                void musicClick(list, listinfo.id, item, source, {
-                  ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-                })
+                void musicClick(list, listinfo.id, item, source, getListMetaInfo(listinfo))
               }
             }
           }}
           onplay={() => {
-            void playMusic(listinfo.id, list, item, source, {
-              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-            })
+            void playMusic(listinfo.id, list, item, source, getListMetaInfo(listinfo))
           }}
         />
       {/snippet}
@@ -202,10 +197,9 @@
     <Menu
       bind:this={menu}
       {source}
+      deviceid={listinfo.type == 'local' ? listinfo.listMeta.deviceId : null}
       onplay={async (musicInfo) => {
-        void playMusic(listinfo.id, list, musicInfo, source, {
-          ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-        })
+        void playMusic(listinfo.id, list, musicInfo, source, getListMetaInfo(listinfo))
       }}
       onhide={() => {
         activeIndex = -1
@@ -220,9 +214,7 @@
   {list}
   onselect={(idx, isPlay) => {
     if (isPlay) {
-      void playMusic(listinfo.id, list, list[idx], source, {
-        ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-      })
+      void playMusic(listinfo.id, list, list[idx], source, getListMetaInfo(listinfo))
     } else {
       scrollToIndex(idx)
     }

@@ -128,6 +128,7 @@ declare namespace AnyListen {
       ext: string
       bitrateLabel: string | null
       sizeStr: string
+      deviceId: string
     }
 
     interface MusicInfoBase<IsLocal extends boolean> {
@@ -190,7 +191,9 @@ declare namespace AnyListen {
       deviceId: string
       path: string
       includeSubDir: boolean
+      lazzyParseMeta?: boolean
       enabledRemove?: boolean
+      syncTime: number
       usePolling?: boolean
     }
     type SourceType = 'songlist' | 'topSongs' | 'search' | 'album'
@@ -199,13 +202,13 @@ declare namespace AnyListen {
       source: string
       syncId: string
       syncTime: number
-      picUrl: string | null
       sourceType: SourceType
       [key: string]: unknown
     }
     interface UserListInfoByRemoteMeta extends UserListInfoBaseMeta {
       extensionId: string
       source: string
+      lazzyParseMeta?: boolean
       syncTime: number
       [key: string]: unknown
     }
@@ -351,6 +354,9 @@ declare namespace AnyListen {
     interface UserListInfoLocalFull extends UserListInfoType<'local'> {
       list: Music.MusicInfo[]
     }
+    interface UserListInfoRemoteFull extends UserListInfoType<'remote'> {
+      list: Music.MusicInfo[]
+    }
     interface UserListInfoOnlineFull extends UserListInfoType<'online'> {
       list: Music.MusicInfo[]
     }
@@ -358,8 +364,8 @@ declare namespace AnyListen {
     interface ListDataFull {
       defaultList: MyDefaultListInfoFull
       loveList: MyLoveListInfoFull
-      lastPlayList: MyLastPlayListFull
-      userList: Array<UserListInfoGeneralFull | UserListInfoLocalFull | UserListInfoOnlineFull>
+      // lastPlayList: MyLastPlayListFull
+      userList: Array<UserListInfoGeneralFull | UserListInfoLocalFull | UserListInfoRemoteFull | UserListInfoOnlineFull>
     }
   }
   namespace IPCList {
@@ -502,7 +508,7 @@ declare namespace AnyListen {
     interface PlayerActionSet {
       listId: string | null
       list: Player.PlayMusicInfo[]
-      source: List.SourceType
+      source: Player.SourceType
       isSync?: boolean
     }
     interface PlayerActionAdd {
@@ -575,7 +581,7 @@ declare namespace AnyListen {
       info: SavedPlayInfo
       list: Player.PlayMusicInfo[]
       listId: string | null
-      source: List.SourceType
+      source: Player.SourceType
       historyList: PlayHistoryListItem[]
       isCollect: boolean
     }
@@ -784,6 +790,7 @@ declare global {
     type TopSongsItem = AnyListen.Resource.TopSongsItem
     type TopSongsDetailInfo = AnyListen.Resource.TopSongsDetailInfo
     type MusicCommentItem = AnyListen.Resource.MusicCommentItem
+    type PlayInfo = AnyListen.IPCPlayer.PlayInfo
 
     type ParamsData = Record<string, string | number | null | undefined | boolean>
     interface RequestOptions {
@@ -999,48 +1006,10 @@ declare global {
       listAction: (action: AnyListen.IPCList.ActionList) => Promise<void>
       onListAction: (handler: (action: AnyListen.IPCList.ActionList) => unknown) => () => void
     }
-    interface PlayInfo {
-      info: {
-        time: number
-        maxTime: number
-        index: number
-        historyIndex: number
-      }
-      list: Array<{
-        /**
-         * 当前信息唯一ID
-         */
-        itemId: string
-        /**
-         * 当前播放歌曲的列表 id
-         */
-        musicInfo: AnyListen.Music.MusicInfo
-        /**
-         * 当前播放歌曲的列表 id
-         */
-        listId: string
-        /**
-         * 列表类型
-         */
-        source: AnyListen.List.SourceType
-        /**
-         * 是否属于 “稍后播放”
-         */
-        playLater: boolean
-        /**
-         * 是否已播放
-         */
-        played: boolean
-      }>
-      listId: string | null
-      historyList: Array<{
-        id: string
-        time: number
-      }>
-    }
+
     interface Player {
       /** 获取播放信息 */
-      getPlayInfo: () => Promise<PlayInfo>
+      getPlayInfo: () => Promise<AnyListen.IPCPlayer.PlayInfo>
       playListAction: (action: AnyListen.IPCPlayer.PlayListAction) => Promise<void>
       playerAction: (action: AnyListen.IPCPlayer.ActionPlayer) => Promise<void>
       playHistoryListAction: (action: AnyListen.IPCPlayer.PlayHistoryListAction) => Promise<void>

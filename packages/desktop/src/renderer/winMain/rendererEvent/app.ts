@@ -1,4 +1,5 @@
 import { clearCache, getCacheSize } from '@any-listen/app/cache'
+import { proxyServerState } from '@any-listen/app/modules/proxyServer/state'
 
 import { appState, updateSetting } from '@/app'
 import { quit } from '@/app/actions'
@@ -22,8 +23,11 @@ import {
 // 暴露给前端的方法
 export const createExposeApp = () => {
   return {
-    async getMachineId(event) {
-      return appState.machineId
+    async getAppInfo(event) {
+      return {
+        machineId: appState.machineId,
+        proxyServerHost: proxyServerState.proxyHost,
+      }
     },
     async getSetting(event) {
       return appState.appSetting

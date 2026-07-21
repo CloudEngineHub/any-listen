@@ -29,27 +29,62 @@
     listCover?: string | null
   ) => {
     if (!info) return undefined
-    return {
-      id: info.id,
-      name: info.name,
-      createTime: info.type == 'default' ? '' : dateFormat(info.meta.createTime, 'Y-M-D'),
-      playCount: info.meta.playCount,
-      pic: info.type == 'default' ? '' : info.meta.pic || listCover || '',
-      picIcon: LIST_PIC_ICON[info.id as keyof typeof LIST_PIC_ICON],
-      getSortTimeFn() {
-        if (
-          info.type === 'local' ||
-          (info.type === 'remote' &&
-            resourceList.listProvider.find((l) => l.extensionId === info.meta.extensionId && l.id === info.meta.source)
-              ?.fileSortable)
-        ) {
-          return async (list, type) => {
-            return sortListMusics(info.id, list, type)
-          }
-        }
-        return null
-      },
-    } satisfies ListInfo
+    switch (info.type) {
+      case 'default':
+      case 'general':
+        return {
+          id: info.id,
+          name: info.name,
+          createTime: info.type == 'default' ? '' : dateFormat(info.meta.createTime, 'Y-M-D'),
+          playCount: info.meta.playCount,
+          pic: info.type == 'default' ? '' : info.meta.pic || listCover || '',
+          picIcon: LIST_PIC_ICON[info.id as keyof typeof LIST_PIC_ICON],
+          type: info.type,
+        } satisfies ListInfo
+      case 'local':
+        return {
+          id: info.id,
+          name: info.name,
+          createTime: dateFormat(info.meta.createTime, 'Y-M-D'),
+          playCount: info.meta.playCount,
+          pic: info.meta.pic || listCover || '',
+          type: info.type,
+          listMeta: {
+            deviceId: info.meta.deviceId,
+          },
+          getSortTimeFn() {
+            return async (list, type) => {
+              return sortListMusics(info.id, list, type)
+            }
+          },
+        } satisfies ListInfo
+      case 'online':
+      case 'remote':
+        return {
+          id: info.id,
+          name: info.name,
+          createTime: dateFormat(info.meta.createTime, 'Y-M-D'),
+          playCount: info.meta.playCount,
+          pic: info.meta.pic || listCover || '',
+          type: info.type,
+          listMeta: {
+            extensionId: info.meta.extensionId,
+            source: info.meta.source,
+          },
+          getSortTimeFn() {
+            if (
+              info.type === 'remote' &&
+              resourceList.listProvider.find((l) => l.extensionId === info.meta.extensionId && l.id === info.meta.source)
+                ?.fileSortable
+            ) {
+              return async (list, type) => {
+                return sortListMusics(info.id, list, type)
+              }
+            }
+            return null
+          },
+        } satisfies ListInfo
+    }
   }
   const targetListInfo = $derived(getTargetActiveListInfo($userListsAll, $query.id))
   const listCover = $derived(useListCover(targetListInfo))
@@ -114,7 +149,7 @@
 
 <div class="view-container container">
   {#if listInfo}
-    <MusicList bind:this={musicList} listinfo={listInfo} {list} onscroll={handleScroll} local />
+    <MusicList bind:this={musicList} listinfo={listInfo} {list} onscroll={handleScroll} />
   {/if}
 </div>
 

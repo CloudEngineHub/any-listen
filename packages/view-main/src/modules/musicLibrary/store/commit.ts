@@ -29,10 +29,9 @@ export const setUserListInited = (inited: boolean) => {
   musicLibraryEvent.userListInited()
 }
 
-export const initUserLists = (info: AnyListen.List.MyAllList) => {
+export const initUserLists = (info: Omit<AnyListen.List.MyAllList, 'lastPlayList'>) => {
   musicLibraryState.loveList = info.loveList
   musicLibraryState.defaultList = info.defaultList
-  musicLibraryState.lastPlayList = info.lastPlayList
   setUserLists(info.userList)
   const changedSubList = new Set<AnyListen.List.ParentId>()
   const changedIds = getAllList().map((l) => {
@@ -137,15 +136,13 @@ const getAllSubListIds = (id: NonNullable<AnyListen.List.UserListInfo['parentId'
   return ids
 }
 
-export const listDataOverwrite = ({ defaultList, loveList, userList, lastPlayList }: AnyListen.List.ListDataFull) => {
+export const listDataOverwrite = ({ defaultList, loveList, userList }: AnyListen.List.ListDataFull) => {
   musicLibraryState.allMusicList.clear()
 
   const { list: defList, ...defInfo } = defaultList
   setMusicList(LIST_IDS.DEFAULT, defList)
   const { list: lovList, ...lovInfo } = loveList
   setMusicList(LIST_IDS.LOVE, lovList)
-  const { list: lpList, ...lpInfo } = lastPlayList
-  setMusicList(LIST_IDS.LAST_PLAYED, lpList)
 
   const newUserList = userList.map(({ list, ...listInfo }) => {
     setMusicList(listInfo.id, list)
@@ -155,7 +152,6 @@ export const listDataOverwrite = ({ defaultList, loveList, userList, lastPlayLis
   initUserLists({
     defaultList: defInfo,
     loveList: lovInfo,
-    lastPlayList: lpInfo,
     userList: newUserList,
   })
   musicLibraryEvent.listMusicChanged(Array.from(musicLibraryState.allMusicList.keys()))

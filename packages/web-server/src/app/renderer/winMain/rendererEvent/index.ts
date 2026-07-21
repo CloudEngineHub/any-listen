@@ -14,6 +14,7 @@ import { createExposeMusic } from './music'
 import { createExposePlayer, createServerPlayer } from './player'
 import { createExposeResource } from './resource'
 import { createExposeSoundEffect } from './soundEffect'
+import { createExposeSync, createServerSync } from './sync'
 import { createExposeTheme, createServerTheme } from './theme'
 
 export type ExposeServerFunctions = Omit<
@@ -59,6 +60,7 @@ export const init = () => {
     ...createExposeTheme(),
     ...createExposeExtension(),
     ...createExposeSoundEffect(),
+    ...createExposeSync(),
   }
 
   socketEvent.on('new_socket', (socket) => {
@@ -89,6 +91,7 @@ export const init = () => {
     socket.remoteQueueList = msg2call.createRemoteGroup('list', { queue: true, timeout: 0 })
     socket.remoteQueueList = msg2call.createRemoteGroup('list', { queue: true, timeout: 0 })
     socket.remoteQueueDislike = msg2call.createRemoteGroup('dislike', { queue: true, timeout: 0 })
+    socket.remoteQueueSync = msg2call.createRemoteGroup('sync', { queue: true, timeout: 0 })
     socket.remoteQueueExtension = msg2call.createRemoteGroup('extension_q', { queue: true, timeout: 0 })
     socket.remoteExtension = msg2call.createRemoteGroup('extension', { timeout: 60_000 })
     socket.onMessage = (message) => {
@@ -108,4 +111,5 @@ export const rendererIPC: ExposeServerFunctions = {
   ...createServerDislike(),
   ...createServerTheme(),
   ...createServerExtension(),
+  ...createServerSync(),
 }

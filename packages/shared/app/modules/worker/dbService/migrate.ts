@@ -1,7 +1,21 @@
 import type Database from 'better-sqlite3'
 
+import {
+  queryLocalMusicInfo as queryLocalMusicInfoByList,
+  updateLocalMusicInfo as updateLocalMusicInfoByList,
+} from './modules/music_library/dbHelper'
+import {
+  queryLocalMusicInfo as queryLocalMusicInfoByPlayList,
+  updateLocalMusicInfo as updateLocalMusicInfoByPlayList,
+} from './modules/play_list/dbHelper'
 import tables, { DB_VERSION } from './tables'
 
+const updateDBVersion = (db: Database.Database) => {
+  db.prepare('UPDATE "main"."metadata" SET "field_value"=@value WHERE "field_name"=@name').run({
+    name: 'db_version',
+    value: DB_VERSION,
+  })
+}
 const migrateV1 = (db: Database.Database) => {
   const sql = `
     BEGIN TRANSACTION;
@@ -21,13 +35,27 @@ const migrateV1 = (db: Database.Database) => {
     COMMIT;
   `
   db.exec(sql)
-  db.prepare('UPDATE "main"."metadata" SET "field_value"=@value WHERE "field_name"=@name').run({
-    name: 'db_version',
-    value: DB_VERSION,
-  })
+  updateDBVersion(db)
+}
+const migrateV2 = (machineId: string) => {
+  // db.prepare('')
+  const list = queryLocalMusicInfoByList()
+  for (const item of list) {
+    const meta = JSON.parse(item.meta) as { deviceId?: string }
+    meta.deviceId ||= machineId
+    item.meta = JSON.stringify(meta)
+  }
+  updateLocalMusicInfoByList(list)
+  const plist = queryLocalMusicInfoByPlayList()
+  for (const item of plist) {
+    const meta = JSON.parse(item.meta) as { deviceId?: string }
+    meta.deviceId ||= machineId
+    item.meta = JSON.stringify(meta)
+  }
+  updateLocalMusicInfoByPlayList(plist)
 }
 
-export default (db: Database.Database) => {
+export default (db: Database.Database, machineId: string) => {
   // PRAGMA user_version = x
   // console.log(db.prepare('PRAGMA user_version').get().user_version)
   // https://github.com/WiseLibs/better-sqlite3/issues/668#issuecomment-1145285728
@@ -39,6 +67,10 @@ export default (db: Database.Database) => {
   switch (dbVersion) {
     case '1':
       migrateV1(db)
+    // fall through
+    case '2':
+      migrateV2(machineId)
+      updateDBVersion(db)
       break
   }
 }

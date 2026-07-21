@@ -43,6 +43,7 @@ export interface IPCSocket extends WebSocket {
   remoteQueuePlayer: AnyListen.IPCPlayer.ServerIPCActions
   remoteQueueList: AnyListen.IPCList.ServerIPCActions
   remoteQueueDislike: AnyListen.IPCDislikeList.ServerIPCActions
+  remoteQueueSync: AnyListen.IPCSync.ServerIPCActions
   remoteQueueExtension: AnyListen.IPCExtension.ServerIPCActions
   remoteExtension: AnyListen.IPCExtension.ServerIPCActions
 }
@@ -279,6 +280,7 @@ export const connect = async (
     client.remoteQueuePlayer = message2read.createRemoteGroup('player', { queue: true, timeout: 0 })
     client.remoteQueueList = message2read.createRemoteGroup('list', { queue: true, timeout: 0 })
     client.remoteQueueDislike = message2read.createRemoteGroup('dislike', { queue: true, timeout: 0 })
+    client.remoteQueueSync = message2read.createRemoteGroup('sync', { queue: true, timeout: 0 })
     client.remoteQueueExtension = message2read.createRemoteGroup('extension_q', { queue: true, timeout: 0 })
     client.remoteExtension = message2read.createRemoteGroup('extension', { timeout: 60_000 })
 

@@ -46,7 +46,7 @@
 
 {#if item.type === 'input'}
   <InputItem
-    id={`extenstion_${item.field}_${item.type}`}
+    id={`appSetting_${item.field}_${item.type}`}
     name={$t(item.name)}
     desc={item.description && $t(item.description)}
     textarea={item.textarea}
@@ -62,7 +62,7 @@
   />
 {:else if item.type === 'boolean'}
   <CheckboxItem
-    id={`extenstion_${item.field}_${item.type}`}
+    id={`appSetting_${item.field}_${item.type}`}
     name={$t(item.name)}
     desc={item.description && $t(item.description)}
     checked={setting.val as boolean}
@@ -79,7 +79,7 @@
   <RadioGroup name={$t(item.name)} desc={item.description && $t(item.description)}>
     {#each list as radioItem (radioItem.value)}
       <RadioItem
-        id={`extenstion_${item.field}_${item.type}_${radioItem.value}`}
+        id={`appSetting_${item.field}_${item.type}_${radioItem.value}`}
         name={$t(radioItem.name)}
         value={radioItem.value}
         checked={(setting.val as string) == radioItem.value}

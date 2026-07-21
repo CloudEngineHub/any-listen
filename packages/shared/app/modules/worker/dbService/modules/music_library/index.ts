@@ -1,5 +1,7 @@
 import { LIST_IDS } from '@any-listen/common/constants'
+import { buildListDataFull } from '@any-listen/common/tools'
 import { arrPush, arrPushByPosition, arrUnshift } from '@any-listen/common/utils'
+import { getListDataMD5 } from '@any-listen/nodejs/tools'
 
 import {
   deleteUserLists,
@@ -681,13 +683,14 @@ export const listDataOverwrite = (myListData: AnyListen.List.ListDataFull) => {
   const dbMusicInfos: MusicInfo[] = [
     ...toDBMusicInfo(listData.defaultList.list, LIST_IDS.DEFAULT),
     ...toDBMusicInfo(listData.loveList.list, LIST_IDS.LOVE),
-    ...toDBMusicInfo(listData.lastPlayList.list, LIST_IDS.LAST_PLAYED),
+    ...queryMusicInfoByListId(LIST_IDS.LAST_PLAYED),
+    // ...toDBMusicInfo(listData.lastPlayList.list, LIST_IDS.LAST_PLAYED),
   ]
   const idxMap = new Map<string | null, number>()
   for (const { list, ...listInfo } of listData.userList) {
-    let idx = idxMap.get(listInfo.parentId)
-    if (idx == null) idxMap.set(listInfo.parentId, (idx = 0))
-    else idx++
+    let idx = idxMap.get(listInfo.parentId) ?? -1
+    idx++
+    idxMap.set(listInfo.parentId, idx)
     dbLists.push({
       id: listInfo.id,
       name: listInfo.name,
@@ -701,7 +704,7 @@ export const listDataOverwrite = (myListData: AnyListen.List.ListDataFull) => {
   overwriteListData(dbLists, dbMusicInfos)
   updateUserListsFromDB(
     toDBListInfo(
-      [listData.defaultList, listData.loveList, listData.lastPlayList].map(({ list, ...listInfo }) => {
+      [listData.defaultList, listData.loveList].map(({ list, ...listInfo }) => {
         return listInfo
       })
     )
@@ -710,7 +713,7 @@ export const listDataOverwrite = (myListData: AnyListen.List.ListDataFull) => {
   musicLists.clear()
   musicLists.set(LIST_IDS.DEFAULT, listData.defaultList.list)
   musicLists.set(LIST_IDS.LOVE, listData.loveList.list)
-  musicLists.set(LIST_IDS.LAST_PLAYED, listData.lastPlayList.list)
+  // musicLists.set(LIST_IDS.LAST_PLAYED, listData.lastPlayList.list)
   for (const list of listData.userList) musicLists.set(list.id, list.list)
 
   initListInfo(true)
@@ -746,4 +749,27 @@ export const getListsFirstMusics = (ids: string[]) => {
     const list = getListMusics(id)
     return list.slice(0, 4)
   })
+}
+
+export const getAllListData = (): AnyListen.List.ListDataFull => {
+  initUserList()
+
+  const lists = {
+    defaultList: {
+      ...defaultList!,
+      list: getListMusics(LIST_IDS.DEFAULT),
+    },
+    loveList: { ...loveList!, list: getListMusics(LIST_IDS.LOVE) },
+    userList: [] as AnyListen.List.UserListInfoFull[],
+  }
+
+  for (const list of userLists) {
+    lists.userList.push({ ...list, list: getListMusics(list.id) })
+  }
+
+  return buildListDataFull(lists)
+}
+
+export const getAllListDataMD5 = () => {
+  return getListDataMD5(getAllListData())
 }

@@ -21,7 +21,6 @@ export const createServerDislike = () => {
   const actions = {
     async dislikeAction(action) {
       broadcast((socket) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (socket.winType != 'main' || !socket.isInited) return
         void socket.remoteQueueDislike.dislikeAction(action)
       })

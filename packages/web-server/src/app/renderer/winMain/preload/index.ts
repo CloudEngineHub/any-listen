@@ -12,6 +12,7 @@ import { createClientMusic } from './music'
 import { createClientPlayer, createExposePlayer } from './player'
 import { createClientResource } from './resource'
 import { createClientSoundEffect } from './soundEffect'
+import { createClientSync, createExposeSync } from './sync'
 import { createClientTheme, createExposeTheme } from './theme'
 
 console.log('preload win main')
@@ -49,6 +50,7 @@ const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = ({
     ...createExposeDislike(clientCall),
     ...createExposeTheme(clientCall),
     ...createExposeExtension(clientCall),
+    ...createExposeSync(clientCall),
   }
   createIPC({
     exposeObj,
@@ -72,6 +74,7 @@ const connectIPCService: AnyListen.IPC.ConnectIPCSrivice = ({
         ...createClientExtension(ipcSocket),
         ...createClientSoundEffect(ipcSocket),
         ...createClientDesktopLyric(ipcSocket),
+        ...createClientSync(ipcSocket),
       }
       onConnected(ipc as AnyListen.IPC.ServerIPC)
     },

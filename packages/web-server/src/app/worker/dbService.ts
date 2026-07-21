@@ -8,17 +8,19 @@ import { getNativeName } from '@any-listen/nodejs'
 import { i18n } from '@/app/i18n'
 import { appLog } from '@/shared/log4js'
 
+import { appState } from '../app'
+
 const initServices = async (dataPath: string) => {
   let nativeBindingPath = `../native/${getNativeName()}/better_sqlite3.node`
   if (import.meta.env.DEV) nativeBindingPath = '../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
 
-  let dbFileExists = await workers.dbService.init(dataPath, nativeBindingPath)
+  let dbFileExists = await workers.dbService.init(dataPath, nativeBindingPath, appState.machineId)
   if (dbFileExists === null) {
     const backupPath = path.join(dataPath, `${DB_NAME}.${Date.now()}.bak`)
     appLog.warn(i18n.t('database_verify_failed'))
     appLog.warn(i18n.t('database_verify_failed_detail', { backupPath }))
     await workers.dbService.backupDB(dataPath, nativeBindingPath, backupPath)
-    await workers.dbService.init(dataPath, nativeBindingPath)
+    await workers.dbService.init(dataPath, nativeBindingPath, appState.machineId)
   }
 }
 

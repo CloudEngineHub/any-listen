@@ -2,6 +2,7 @@
 
 import { buildUrl } from '@any-listen/web'
 
+import { appState } from '@/modules/app/store/state'
 import { settingState } from '@/modules/setting/store/state'
 
 interface ChromeAudioContext extends AudioContext {
@@ -105,6 +106,9 @@ export const createAudio = () => {
         throw err
       })
     }
+  })
+  audio.addEventListener('error', () => {
+    audio!.src = ''
   })
 
   audioContext = new window.AudioContext({ latencyHint: 'playback' })
@@ -447,7 +451,7 @@ export const setPitchShifter = (val: number) => {
 
 export const setResource = (src: string) => {
   if (!audio) return
-  audio.src = buildUrl(src, settingState.setting['network.proxyAllResources'])
+  audio.src = buildUrl(src, settingState.setting['network.proxyAllResources'], appState.proxyServerHost)
 }
 
 export const setPlay = () => {

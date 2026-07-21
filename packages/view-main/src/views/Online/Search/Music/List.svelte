@@ -104,6 +104,11 @@
       listinfo={{
         id: listInfo.id,
         name: 'search',
+        type: 'online',
+        listMeta: {
+          extensionId: searchInfo.extId,
+          source: searchInfo.source,
+        },
         // TODO: save list
       }}
       onreload={() => {

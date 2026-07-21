@@ -3,6 +3,7 @@ import { buildUrl, checkPicUrl } from '@any-listen/web'
 import emptyAudioSource from '@/assets/medias/Silence02s.mp3'
 import { onRelease } from '@/modules/app/shared'
 import { executeLocalCommand } from '@/modules/app/store/action'
+import { appState } from '@/modules/app/store/state'
 import { lyricEvent } from '@/modules/lyric/store/event'
 import { settingEvent } from '@/modules/setting/store/event'
 import { settingState } from '@/modules/setting/store/state'
@@ -45,9 +46,9 @@ export const initMediaSessionInfo = () => {
       mediaMetadata.artist = playerState.title || ''
     }
     if (playerState.musicInfo.pic) {
-      const url = buildUrl(playerState.musicInfo.pic, settingState.setting['network.proxyAllResources'])
+      const url = buildUrl(playerState.musicInfo.pic, settingState.setting['network.proxyAllResources'], appState.proxyServerHost)
       prevPicUrl = url
-      void checkPicUrl(prevPicUrl, settingState.setting['network.proxyAllResources']).then((vaild) => {
+      void checkPicUrl(prevPicUrl, settingState.setting['network.proxyAllResources'], appState.proxyServerHost).then((vaild) => {
         if (vaild && prevPicUrl == url) {
           mediaMetadata.artwork = [{ src: url }]
           // @ts-expect-error

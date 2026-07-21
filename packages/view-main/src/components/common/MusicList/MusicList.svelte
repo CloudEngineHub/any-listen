@@ -9,6 +9,7 @@
   import type { ComponentExports } from 'svelte'
   import MiniHeader from './MiniHeader.svelte'
   import Loading from '@/components/base/Loading.svelte'
+  import { getListMetaInfo } from './shared'
   let {
     loading = false,
     error = false,
@@ -69,31 +70,13 @@
           multimode = !multimode
         }}
         onplay={() => {
-          void playMusic(
-            listinfo.id,
-            list,
-            list[0],
-            source,
-            {
-              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-            },
-            true
-          )
+          void playMusic(listinfo.id, list, list[0], source, getListMetaInfo(listinfo), true)
         }}
         onplayrandom={async () => {
           if (settingState.setting['player.togglePlayMethod'] != 'random') {
             await updateSetting({ 'player.togglePlayMethod': 'random' })
           }
-          void playMusic(
-            listinfo.id,
-            list,
-            list[getRandom(0, list.length)],
-            source,
-            {
-              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-            },
-            true
-          )
+          void playMusic(listinfo.id, list, list[getRandom(0, list.length)], source, getListMetaInfo(listinfo), true)
         }}
         onsort={() => {
           listsort = true
@@ -121,31 +104,13 @@
           multimode = !multimode
         }}
         onplay={() => {
-          void playMusic(
-            listinfo.id,
-            list,
-            list[0],
-            source,
-            {
-              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-            },
-            true
-          )
+          void playMusic(listinfo.id, list, list[0], source, getListMetaInfo(listinfo), true)
         }}
         onplayrandom={async () => {
           if (settingState.setting['player.togglePlayMethod'] != 'random') {
             await updateSetting({ 'player.togglePlayMethod': 'random' })
           }
-          void playMusic(
-            listinfo.id,
-            list,
-            list[getRandom(0, list.length)],
-            source,
-            {
-              ...(listinfo.listMeta ?? { extensionId: '', source: '' }),
-            },
-            true
-          )
+          void playMusic(listinfo.id, list, list[getRandom(0, list.length)], source, getListMetaInfo(listinfo), true)
         }}
         onsort={() => {
           listsort = true

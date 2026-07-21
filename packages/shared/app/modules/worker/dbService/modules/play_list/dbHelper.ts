@@ -7,6 +7,8 @@ import {
   createClearStatement,
   createDeleteStatement,
   createInsertStatement,
+  createLocalMusicInfoUpdateStatement,
+  createQueryListMusicInfoStatement,
   createQueryStatement,
   createUpdatePlayedStatement,
   createUpdatePositionStatement,
@@ -101,4 +103,17 @@ export const updatePositionInfo = (list: PositionInfo[]) => {
 export const clearList = () => {
   const clearStatement = createClearStatement()
   clearStatement.run()
+}
+
+export const queryLocalMusicInfo = () => {
+  const queryStatement = createQueryListMusicInfoStatement()
+  return queryStatement.all()
+}
+
+export const updateLocalMusicInfo = (params: Array<Pick<ListMusicInfo, 'item_id' | 'meta'>>) => {
+  const db = getDB()
+  const updateStatement = createLocalMusicInfoUpdateStatement()
+  db.transaction((params: Array<Pick<ListMusicInfo, 'item_id' | 'meta'>>) => {
+    for (const info of params) updateStatement.run(info)
+  })(params)
 }

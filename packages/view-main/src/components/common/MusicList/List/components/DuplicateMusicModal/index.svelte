@@ -9,6 +9,7 @@
   import { playLocalListMusic, removeMusic } from '../../action'
   import Empty from '@/components/material/Empty.svelte'
   import type { DuplicateMusicItem } from '@/worker/main/list'
+  import { appState } from '@/modules/app/store/state'
   let {
     visible = $bindable(),
     listinfo,
@@ -20,6 +21,8 @@
   let duplicateList = $state.raw<DuplicateMusicItem[]>([])
 
   let listItemHeight = useListItemHeight(3.2)
+
+  const notLocalList = $derived(listinfo.type === 'local' && listinfo.listMeta.deviceId != appState.machineId)
 
   const handleFilterList = async () => {
     duplicateList = await workers.main.filterDuplicateMusic(await getListMusics(listinfo.id))
@@ -85,9 +88,11 @@
             onplay={() => {
               handlePlay(index)
             }}
-            onremove={async () => {
-              await handleRemove(index)
-            }}
+            onremove={notLocalList
+              ? undefined
+              : async () => {
+                  await handleRemove(index)
+                }}
           />
         {/snippet}
       </VirtualizedList>

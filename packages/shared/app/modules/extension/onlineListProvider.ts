@@ -49,6 +49,21 @@ export const syncList = async (list: AnyListen.List.OnlineListInfo) => {
       musicInfos: newList,
     },
   })
+  await sendMusicListAction({
+    action: 'list_update',
+    data: {
+      lists: [
+        {
+          ...list,
+          meta: {
+            ...list.meta,
+            syncTime: Date.now(),
+          },
+        },
+      ],
+      sync: true,
+    },
+  })
 }
 const handleSyncList = async () => {
   if (state.syncing || !state.waitingSyncLists.length) return

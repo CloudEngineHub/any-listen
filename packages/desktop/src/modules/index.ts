@@ -12,6 +12,7 @@ import { initMusicList } from './musicList'
 import { initPlayer } from './player'
 import { initProxyServer } from './proxyServer'
 import { initResources } from './resources'
+import { initSync } from './sync'
 import { initTheme } from './theme'
 import { initTray } from './tray'
 
@@ -27,6 +28,7 @@ export const initModules = async () => {
     initExtension(),
     initResources(),
     initProxyServer(),
+    initSync(),
   ])
   // initMusicList()
   // initDielikeList()

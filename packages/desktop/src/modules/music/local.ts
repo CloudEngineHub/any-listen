@@ -17,6 +17,7 @@ export const getMusicUrl = async ({
   isRefresh?: boolean
   quality?: string
 }): Promise<AnyListen.IPCMusic.MusicUrlInfo | null> => {
+  if (musicInfo.meta.deviceId !== appState.machineId) return null
   if (!isRefresh) {
     const path = await getLocalFilePath(musicInfo)
     if (path) {
@@ -39,6 +40,7 @@ export const getMusicPicUrl = async ({
   musicInfo: AnyListen.Music.MusicInfoLocal
   isRefresh?: boolean
 }): Promise<AnyListen.IPCMusic.MusicPicInfo | null> => {
+  if (musicInfo.meta.deviceId !== appState.machineId) return null
   if (isRefresh && (!musicInfo.meta.picUrl || !(await verifyResourceBoolean(musicInfo.meta.picUrl)))) {
     isRefresh = false
   }
@@ -53,7 +55,7 @@ export const getMusicPicUrl = async ({
         }
       }
       return {
-        url: await writeProxyCache(`${musicInfo.meta.filePath}.${Date.now()}.${pic.format}`, pic.data),
+        url: await writeProxyCache(`${musicInfo.meta.filePath}.${pic.format}`, pic.data),
         isFromCache: false,
       }
     }
@@ -76,6 +78,7 @@ export const getLyricInfo = async ({
   musicInfo: AnyListen.Music.MusicInfoLocal
   isRefresh?: boolean
 }): Promise<AnyListen.IPCMusic.MusicLyricInfo | null> => {
+  if (musicInfo.meta.deviceId !== appState.machineId) return null
   if (!isRefresh) {
     const [lyricInfo, fileLyricInfo] = await Promise.all([
       getCachedLyricInfo(musicInfo),

@@ -1,6 +1,7 @@
 import { createCache } from '@any-listen/common/cache'
 import { checkPicUrl } from '@any-listen/web'
 
+import { appState } from '@/modules/app/store/state'
 import { extensionEvent } from '@/modules/extension/store/event'
 import { lyricEvent } from '@/modules/lyric/store/event'
 import { updateListMusic } from '@/modules/musicLibrary/store/actions'
@@ -46,7 +47,7 @@ interface GetMusicPicInfo extends AnyListen.IPCMusic.GetMusicPicInfo {
 const handleGetMusicPicFromRemote = async (info: AnyListen.IPCMusic.GetMusicPicInfo) => {
   const urlInfo = await getMusicPicFromRemote(info)
   if (urlInfo.isFromCache) {
-    const isValid = await checkPicUrl(urlInfo.url, settingState.setting['network.proxyAllResources'])
+    const isValid = await checkPicUrl(urlInfo.url, settingState.setting['network.proxyAllResources'], appState.machineId)
     if (!isValid && !info.isRefresh) {
       return handleGetMusicPicFromRemote({ ...info, isRefresh: true })
     }
@@ -60,10 +61,13 @@ const handleGetMusicPic = async (info: GetMusicPicInfo) => {
   if (picRemoteGettingPromises.has(info.musicInfo.id)) return picRemoteGettingPromises.get(info.musicInfo.id)!
   const promise = handleGetMusicPicFromRemote(info)
     .then((urlInfo) => {
-      if (info.musicInfo.meta.picUrl != urlInfo.url) {
+      const isNotOtherDeviceLocal =
+        info.source == 'local' && !(info.musicInfo.isLocal && info.musicInfo.meta.deviceId != appState.machineId)
+      // console.log('urlInfo.url', urlInfo.url)
+      if (info.musicInfo.meta.picUrl != urlInfo.url && isNotOtherDeviceLocal) {
         info.musicInfo.meta.picUrl = urlInfo.url
       }
-      if (info.listId && info.source == 'local') {
+      if (info.listId && isNotOtherDeviceLocal) {
         void updateListMusic(info.listId, info.musicInfo)
       }
       playerEvent.listMusicPicUpdated(info.musicInfo, info.listId, info.source)

@@ -1,5 +1,7 @@
 // import { state } from './shared'
 
+import { VIRTUAL_PROTOCOL } from '@any-listen/common/tools'
+
 import { resourceState } from './shared'
 
 export const TRY_QUALITYS_LIST = ['flac24bit', 'flac', '320k'] as const
@@ -45,7 +47,8 @@ export const getExtSource = <T extends AnyListen.Extension.ResourceAction>(
 
 const httpRxp = /^(?:(?:https?|file):\/\/\S+|(?:\.{0,2})\/(?!\/)\S*)$/
 const httpRxpWebServer = /^(?:https?:\/\/\S+|(?:\.{0,2})\/(?!\/)\S*)$/
+const proxyUrlRxp = new RegExp(`^${VIRTUAL_PROTOCOL}`)
 export const allowedUrl = (url: string) => {
-  if (import.meta.env.VITE_IS_DESKTOP) return httpRxp.test(url)
-  return httpRxpWebServer.test(url)
+  if (import.meta.env.VITE_IS_DESKTOP) return httpRxp.test(url) || proxyUrlRxp.test(url)
+  return httpRxpWebServer.test(url) || proxyUrlRxp.test(url)
 }

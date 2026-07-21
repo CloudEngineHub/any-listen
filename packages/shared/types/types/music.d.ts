@@ -43,6 +43,7 @@ declare namespace AnyListen {
       ext: string
       bitrateLabel: string | null
       sizeStr: string
+      deviceId: string
     }
 
     interface MusicInfoBase<IsLocal extends boolean> {

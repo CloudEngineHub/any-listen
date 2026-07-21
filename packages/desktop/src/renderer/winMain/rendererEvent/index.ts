@@ -15,6 +15,7 @@ import { createExposeMusic } from './music'
 import { createExposePlayer } from './player'
 import { createExposeResource } from './resource'
 import { createExposeSoundEffect } from './soundEffect'
+import { createExposeSync } from './sync'
 import { createExposeTheme } from './theme'
 
 export type ExposeFunctions = Omit<
@@ -47,6 +48,7 @@ export const init = (sendEvent: (channelName: string, data: unknown) => void) =>
     ...createExposeTheme(),
     ...createExposeExtension(),
     ...createExposeSoundEffect(),
+    ...createExposeSync(),
   }
 
   const rendererCallUtil = createRendererCall<AnyListen.IPC.ClientIPC>(IPC_NAMES.VIEW_MAIN, exposeObj, sendEvent)

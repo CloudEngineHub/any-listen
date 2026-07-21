@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { appState } from '@/modules/app/store/state'
   import { settingState } from '@/modules/setting/store/state'
   import { buildUrl } from '@any-listen/web'
 
@@ -23,7 +24,9 @@
   } = $props()
   let isError = $state(false)
 
-  let derivedSrc = $derived(src ? buildUrl(src, settingState.setting['network.proxyAllResources']) : undefined)
+  let derivedSrc = $derived(
+    src ? buildUrl(src, settingState.setting['network.proxyAllResources'], appState.proxyServerHost) : undefined
+  )
   $effect(() => {
     if (src) isError = false
   })

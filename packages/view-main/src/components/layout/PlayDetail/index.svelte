@@ -12,6 +12,7 @@
   import { buildUrl, checkPicUrl } from '@any-listen/web'
   import { settingState } from '@/modules/setting/store/state'
   import { musicInfo } from '@/modules/player/reactive.svelte'
+  import { appState } from '@/modules/app/store/state'
   let introend = $state(playDetailState.isShowPlayDetail)
   let bgSrc = $state<string>()
   const isDynamicBackground = useSettingValue('playDetail.isDynamicBackground')
@@ -20,8 +21,8 @@
 
   const handlePic = (url?: string | null) => {
     if (url) {
-      url = buildUrl(url, settingState.setting['network.proxyAllResources'])
-      void checkPicUrl(url, settingState.setting['network.proxyAllResources']).then((vaild) => {
+      url = buildUrl(url, settingState.setting['network.proxyAllResources'], appState.proxyServerHost)
+      void checkPicUrl(url, settingState.setting['network.proxyAllResources'], appState.proxyServerHost).then((vaild) => {
         if (vaild) {
           bgSrc = `url(${url})`
         } else {

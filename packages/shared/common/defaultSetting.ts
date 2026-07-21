@@ -115,6 +115,14 @@ const defaultSetting: AnyListen.AppSetting = {
   'desktopLyric.multiLine.style.isFontWeightLine': true,
   'desktopLyric.multiLine.style.isFontWeightExtended': true,
 
+  'sync.webdav.enable': false,
+  'sync.webdav.url': '',
+  'sync.webdav.username': '',
+  'sync.webdav.password': '',
+  'sync.webdav.path': '',
+  'sync.webdav.syncEnable.list': true,
+  'sync.webdav.syncEnable.dislike': true,
+
   'download.savePath': '',
   'download.fileName': '%name% - %singer%',
 

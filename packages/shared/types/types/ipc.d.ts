@@ -8,6 +8,7 @@ import './sound_effect_ipc'
 import './theme_ipc'
 import './resource_ipc'
 import './desktop_lyric_ipc'
+import './sync_ipc'
 
 // type ExcludeSendActions<Actions extends Record<string, any>> = Pick<Actions, {
 //   [K in keyof Actions]: K extends `send${string}` ? never : K
@@ -30,7 +31,8 @@ type ClientAllActions = AnyListen.IPC.ClientCommonActions &
   AnyListen.IPCPlayer.ClientActions &
   AnyListen.IPCList.ClientActions &
   AnyListen.IPCDislikeList.ClientActions &
-  AnyListen.IPCExtension.ClientActions
+  AnyListen.IPCExtension.ClientActions &
+  AnyListen.IPCSync.ClientActions
 type ServerAllActions = AnyListen.IPC.ServerCommonActions &
   AnyListen.IPCMusic.ServerActions &
   AnyListen.IPCResource.ServerActions &
@@ -40,7 +42,8 @@ type ServerAllActions = AnyListen.IPC.ServerCommonActions &
   AnyListen.IPCDislikeList.ServerActions &
   AnyListen.IPCExtension.ServerActions &
   AnyListen.IPCDesktopLyric.ServerActions &
-  AnyListen.IPCSoundEffect.ServerActions
+  AnyListen.IPCSoundEffect.ServerActions &
+  AnyListen.IPCSync.ServerActions
 
 declare global {
   namespace AnyListen {

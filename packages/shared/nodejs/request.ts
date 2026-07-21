@@ -89,6 +89,8 @@ export interface Options {
     | 'MKCOL'
     | 'PROPPATCH'
     | 'QUOTA'
+    | 'LOCK'
+    | 'UNLOCK'
   query?: ParamsData
   headers?: Record<string, string | string[]>
   timeout?: number

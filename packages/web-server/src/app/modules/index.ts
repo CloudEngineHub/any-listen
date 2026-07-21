@@ -11,6 +11,7 @@ import { initHotKey } from './hotKey'
 import { initMusicList } from './musicList'
 import { initPlayer } from './player'
 import { initResources } from './resources'
+import { initSync } from './sync'
 // import { initMusicList } from './musicList'
 import { initTheme } from './theme'
 
@@ -23,8 +24,10 @@ export const initModules = async () => {
     initMusicList(),
     initExtension(),
     initResources(),
+    initSync(),
     initProxyServer(
-      import.meta.env.DEV ? `http://localhost:9500${API_PREFIX}${PROXY_SERVER_PATH}` : `${API_PREFIX}${PROXY_SERVER_PATH}`,
+      import.meta.env.DEV ? 'http://localhost:9500' : '.',
+      `${API_PREFIX}${PROXY_SERVER_PATH}`,
       appState.cacheDataPath
     ),
   ])

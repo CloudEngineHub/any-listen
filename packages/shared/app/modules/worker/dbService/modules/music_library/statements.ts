@@ -191,7 +191,7 @@ export const createListUpdateStatement = () => {
  */
 export const createMusicInfoQueryStatement = () => {
   return dbPrepare<MusicInfoQuery, MusicInfo>(`
-    SELECT mInfo."id", mInfo."name", mInfo."singer", mInfo."is_local", mInfo."interval", mInfo."meta"
+    SELECT mInfo."id", mInfo."list_id", mInfo."name", mInfo."singer", mInfo."is_local", mInfo."interval", mInfo."meta", O."order"
     FROM my_list_music_info mInfo
     LEFT JOIN my_list_music_info_order O
     ON mInfo.id=O.music_id AND O.list_id=@list_id
@@ -320,4 +320,19 @@ export const createMusicInfoOrderDeleteByListIdStatement = () => {
  */
 export const createMusicInfoOrderDeleteStatement = () => {
   return dbPrepare<MusicInfoRemove>('DELETE FROM "main"."my_list_music_info_order" WHERE "music_id"=@id AND "list_id"=@list_id')
+}
+
+export const createLocalMusicInfoQueryStatement = () => {
+  return dbPrepare<[], Pick<MusicInfo, 'id' | 'list_id' | 'meta'>>(`
+    SELECT mInfo."id", mInfo."list_id", mInfo."meta"
+    FROM my_list_music_info mInfo
+    WHERE mInfo.is_local=1
+  `)
+}
+export const createLocalMusicInfoUpdateStatement = () => {
+  return dbPrepare<Pick<MusicInfo, 'id' | 'list_id' | 'meta'>>(`
+    UPDATE my_list_music_info
+    SET "meta"=@meta
+    WHERE "id"=@id AND "list_id"=@list_id AND is_local=1
+  `)
 }

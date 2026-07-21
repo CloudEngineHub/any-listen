@@ -26,14 +26,12 @@ export const createServerTheme = () => {
   return {
     async themeChanged(setting) {
       broadcast((socket) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (socket.winType != 'main' || !socket.isInited) return
         void socket.remoteQueueTheme.themeChanged(setting)
       })
     },
     async themeListChanged(list) {
       broadcast((socket) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (socket.winType != 'main' || !socket.isInited) return
         void socket.remoteQueueTheme.themeListChanged(list)
       })

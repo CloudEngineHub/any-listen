@@ -110,3 +110,18 @@ export const createUpdatePositionStatement = () => {
     SET "position"=@position
     WHERE "item_id"=@item_id`)
 }
+
+export const createQueryListMusicInfoStatement = () => {
+  return dbPrepare<[], Pick<ListMusicInfo, 'item_id' | 'meta'>>(`
+    SELECT "item_id", "meta"
+    FROM "main"."play_list_music_info"
+    WHERE is_local=1
+  `)
+}
+
+export const createLocalMusicInfoUpdateStatement = () => {
+  return dbPrepare<Pick<ListMusicInfo, 'item_id' | 'meta'>>(`
+    UPDATE "main"."play_list_music_info"
+    SET "meta"=@meta
+    WHERE "item_id"=@item_id`)
+}

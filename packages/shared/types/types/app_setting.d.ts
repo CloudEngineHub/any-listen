@@ -557,6 +557,41 @@ declare global {
       'onlineResource.tipSearchSource': string
 
       /**
+       * 是否启用 WebDAV 同步
+       */
+      'sync.webdav.enable': boolean
+
+      /**
+       * WebDAV 服务器地址
+       */
+      'sync.webdav.url': string
+
+      /**
+       * WebDAV 用户名
+       */
+      'sync.webdav.username': string
+
+      /**
+       * WebDAV 密码
+       */
+      'sync.webdav.password': string
+
+      /**
+       * WebDAV 路径
+       */
+      'sync.webdav.path': string
+
+      /**
+       * WebDAV 同步列表是否启用
+       */
+      'sync.webdav.syncEnable.list': boolean
+
+      /**
+       * WebDAV 同步不喜欢列表是否启用
+       */
+      'sync.webdav.syncEnable.dislike': boolean
+
+      /**
        * 主题id
        */
       'theme.id': string

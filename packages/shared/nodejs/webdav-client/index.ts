@@ -73,8 +73,11 @@ const buildFileItems = (list: LsResp[], path: string): WebDAVItem[] => {
     return file
   })
 }
-const buildError = (statusCode?: number, error?: string) => {
-  return new Error(`${statusCode}${error ? `, ${error}` : ''}`)
+const buildError = (url: string, statusCode?: number, error?: string) => {
+  return new Error(`${statusCode}${error ? `, ${error}` : ''} [${url}]`)
+}
+export const is404Error = (error: unknown) => {
+  return error instanceof Error && error.message.startsWith('404')
 }
 
 export class WebDAVClient {
@@ -116,7 +119,7 @@ export class WebDAVClient {
   }
 
   private handleRequestError(url: string, method: Options['method'], statusCode?: number, body?: string) {
-    const error = buildError(statusCode, body)
+    const error = buildError(url, statusCode, body)
     if (statusCode != 404) {
       try {
         this.options.onError?.(`[${method} ${url}] ${error.message}`)
@@ -131,7 +134,7 @@ export class WebDAVClient {
 
   private async request<T = unknown>(
     method: Options['method'],
-    { path, ...options }: Omit<Options, 'method'> & { path?: string } = {}
+    { path, needHeader, ...options }: Omit<Options, 'method'> & { path?: string; needHeader?: boolean } = {}
   ) {
     const headers = options.headers || {}
     if (this.authHeader) headers.Authorization = this.authHeader
@@ -155,7 +158,7 @@ export class WebDAVClient {
       this.options.onDebugLog?.(`request error: [${method} ${url} ${res.statusCode}] ${res.body}`)
       throw this.handleRequestError(url, method, res.statusCode, res.body)
     }
-    if (method === 'HEAD') {
+    if (method === 'HEAD' || needHeader) {
       this.options.onDebugLog?.(
         `request: [${method} ${url} ${res.statusCode} ${contentType}] [${JSON.stringify(res.headers)}] ${res.body}`
       )
@@ -242,6 +245,14 @@ export class WebDAVClient {
     })
   }
 
+  async putData(path: string, data: Buffer | string) {
+    this.options.onDebugLog?.(`putData: [${path}]`)
+    return this.request('PUT', {
+      path,
+      binary: data instanceof Buffer ? data : Buffer.from(data),
+    })
+  }
+
   async getStream(path: string, rangeStart?: string, rangeEnd?: string) {
     this.options.onDebugLog?.(`getStream: [${path}] ${rangeStart || ''}-${rangeEnd || ''}`)
     const res = await this.request<Readable>('GET', {
@@ -261,4 +272,19 @@ export class WebDAVClient {
     })
     return Buffer.from(res)
   }
+
+  // async lock(path: string, lockToken?: string) {
+  //   this.options.onDebugLog?.(`lock: [${path}]`)
+  //   const headers: Record<string, string> = {}
+  //   if (lockToken) headers.If = `<${path}> (${lockToken})`
+  //   const resp = await this.request<{ 'lock-token'?: string }>('LOCK', { path, headers, needHeader: true })
+  //   return resp['lock-token'] || ''
+  // }
+
+  // async unlock(path: string, lockToken: string) {
+  //   this.options.onDebugLog?.(`unlock: [${path}]`)
+  //   const headers: Record<string, string> = {}
+  //   if (lockToken) headers.LockToken = lockToken
+  //   return this.request('UNLOCK', { path, headers })
+  // }
 }

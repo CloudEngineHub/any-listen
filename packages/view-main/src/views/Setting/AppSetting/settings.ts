@@ -361,6 +361,18 @@ export const settings: SettingListSection[] = [
     ],
   },
   {
+    id: 'dataSync',
+    // t('settings.dataSync')
+    name: 'settings.dataSync',
+    list: [
+      {
+        id: 'settings.dataSync.webdav',
+        type: 'component',
+        component: async () => import('./DataSyncWebdav.svelte'),
+      },
+    ],
+  },
+  {
     id: 'other',
     name: 'settings.other',
     list: [
@@ -647,7 +659,7 @@ if (import.meta.env.VITE_IS_DESKTOP) {
 }
 
 if (import.meta.env.VITE_IS_WEB) {
-  settings.splice(settings.length - 3, 0, {
+  settings.splice(settings.length - 2, 0, {
     id: 'security',
     name: 'settings__security',
     list: [

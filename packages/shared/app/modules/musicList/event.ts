@@ -49,6 +49,7 @@ export class Event extends _Event {
     await dbService.listDataOverwrite(listData)
     this.emitEvent('list_data_overwrite', listData, isRemote)
     this.list_changed()
+    // TODO: verifyListDataOverwrite local and remote
   }
 
   /**

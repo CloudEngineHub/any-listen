@@ -36,7 +36,7 @@ export const backupDB = async (dataPath: string, nativeBindingPath: string, back
 }
 
 // 打开、初始化数据库
-export const init = async (dataPath: string, nativeBindingPath: string): Promise<boolean | null> => {
+export const init = async (dataPath: string, nativeBindingPath: string, machineId: string): Promise<boolean | null> => {
   const databasePath = path.join(dataPath, DB_NAME)
   const nativeBinding = path.join(__dirname, nativeBindingPath)
   let dbFileExists = true
@@ -58,7 +58,7 @@ export const init = async (dataPath: string, nativeBindingPath: string): Promise
   }
   db.pragma('journal_mode = WAL')
 
-  if (dbFileExists) migrateData(db)
+  if (dbFileExists) migrateData(db, machineId)
 
   // https://www.sqlite.org/pragma.html#pragma_optimize
   // TODO: Scheduled exec, backup

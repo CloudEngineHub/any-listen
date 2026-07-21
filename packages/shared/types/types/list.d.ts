@@ -17,6 +17,7 @@ declare namespace AnyListen {
       includeSubDir: boolean
       lazzyParseMeta?: boolean
       enabledRemove?: boolean
+      syncTime: number
       usePolling?: boolean
     }
     type SourceType = 'songlist' | 'topSongs' | 'search' | 'album'
@@ -179,15 +180,29 @@ declare namespace AnyListen {
     interface UserListInfoLocalFull extends UserListInfoType<'local'> {
       list: Music.MusicInfo[]
     }
+    interface UserListInfoRemoteFull extends UserListInfoType<'remote'> {
+      list: Music.MusicInfo[]
+    }
     interface UserListInfoOnlineFull extends UserListInfoType<'online'> {
       list: Music.MusicInfo[]
     }
+    type UserListInfoFull = UserListInfoGeneralFull | UserListInfoLocalFull | UserListInfoRemoteFull | UserListInfoOnlineFull
 
     interface ListDataFull {
       defaultList: MyDefaultListInfoFull
       loveList: MyLoveListInfoFull
-      lastPlayList: MyLastPlayListFull
-      userList: Array<UserListInfoGeneralFull | UserListInfoLocalFull | UserListInfoOnlineFull>
+      // lastPlayList: MyLastPlayListFull
+      userList: UserListInfoFull[]
     }
+
+    type MergeMode =
+      | 'merge_local_remote'
+      | 'merge_remote_local'
+      | 'overwrite_local_remote'
+      | 'overwrite_remote_local'
+      | 'overwrite_local_remote_full'
+      | 'overwrite_remote_local_full'
+      // | 'none'
+      | 'cancel'
   }
 }

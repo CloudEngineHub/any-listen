@@ -13,7 +13,7 @@
       musicInfo: AnyListen.Music.MusicInfo
     }
     onplay: () => void
-    onremove: () => Promise<void>
+    onremove?: () => Promise<void>
   } = $props()
 
   let nameLabel = buildMusicName(settingState.setting['download.fileName'], info.musicInfo.name, info.musicInfo.singer)
@@ -40,11 +40,13 @@
         <use xlink:href="#icon-testPlay" />
       </svg>
     </Btn>
-    <Btn onclick={onremove} icon outline>
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212.982 212.982">
-        <use xlink:href="#icon-delete" />
-      </svg>
-    </Btn>
+    {#if onremove}
+      <Btn onclick={onremove} icon outline>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212.982 212.982">
+          <use xlink:href="#icon-delete" />
+        </svg>
+      </Btn>
+    {/if}
   </div>
 </div>
 

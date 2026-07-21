@@ -11,6 +11,7 @@ import { initMusicLibrary } from './musicLibrary/init'
 import { initPlayer } from './player/init'
 import { initResource } from './resource/init'
 import { initSetting } from './setting/init'
+import { initSync } from './sync/init'
 import { initTheme } from './theme/init'
 import { initVersion } from './version/init'
 
@@ -27,6 +28,7 @@ export const registerModules = () => {
   initHotkey()
   initVersion()
   initResource()
+  initSync()
 }
 
 export const connectIPC = (pwd?: string) => {

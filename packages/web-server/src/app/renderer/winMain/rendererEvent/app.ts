@@ -1,4 +1,5 @@
 import { clearCache, getCacheSize } from '@any-listen/app/cache'
+import { proxyServerState } from '@any-listen/app/modules/proxyServer/state'
 
 import { appState, setSystemMode, updateSetting } from '@/app/app'
 import { fileSystemAction } from '@/app/modules/fileSystem'
@@ -26,8 +27,11 @@ export const createExposeApp = () => {
     async setSystemThemeMode(event, isDark) {
       setSystemMode(isDark)
     },
-    async getMachineId(event) {
-      return appState.machineId
+    async getAppInfo(event) {
+      return {
+        machineId: appState.machineId,
+        proxyServerHost: proxyServerState.proxyHost,
+      }
     },
     async getSetting(event) {
       return appState.appSetting

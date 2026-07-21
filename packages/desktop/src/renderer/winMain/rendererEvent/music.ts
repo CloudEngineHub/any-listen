@@ -1,3 +1,4 @@
+import { appState } from '@/app'
 import { getLyricInfo, getMusicPic, getMusicUrl } from '@/modules/music'
 import { workers } from '@/worker'
 
@@ -37,7 +38,7 @@ export const createExposeMusic = () => {
     },
 
     async createLocalMusicInfos(event, paths) {
-      return workers.utilService.createLocalMusicInfos(paths, true)
+      return workers.utilService.createLocalMusicInfos(paths, appState.machineId, true)
     },
   } satisfies Partial<ExposeFunctions>
 }

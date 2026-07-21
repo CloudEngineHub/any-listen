@@ -4,6 +4,7 @@ import { startDBServiceWorker as _startDBServiceWorker, workers } from '@any-lis
 import { DB_NAME } from '@any-listen/common/constants'
 import { dialog } from 'electron'
 
+import { appState } from '@/app'
 // import { log } from '@/shared/log'
 import { i18n } from '@/i18n'
 import { openDirInExplorer } from '@/shared/electron'
@@ -14,7 +15,7 @@ let nativeBindingPath = './native/better_sqlite3.node'
 if (import.meta.env.DEV) nativeBindingPath = '../../build-config/tempLib/better_sqlite3.node'
 
 const initServices = async (dataPath: string) => {
-  let dbFileExists = await workers.dbService.init(dataPath, nativeBindingPath)
+  let dbFileExists = await workers.dbService.init(dataPath, nativeBindingPath, appState.machineId)
   if (dbFileExists === null) {
     const backupPath = path.join(dataPath, `${DB_NAME}.${Date.now()}.bak`)
     dialog.showMessageBoxSync({
@@ -24,7 +25,7 @@ const initServices = async (dataPath: string) => {
     })
     await workers.dbService.backupDB(dataPath, nativeBindingPath, backupPath)
     openDirInExplorer(backupPath)
-    await workers.dbService.init(dataPath, nativeBindingPath)
+    await workers.dbService.init(dataPath, nativeBindingPath, appState.machineId)
   }
 }
 

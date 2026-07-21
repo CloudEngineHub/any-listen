@@ -80,7 +80,7 @@ const handleMusicsParse = async (listId: string, list: AnyListen.Music.MusicInfo
 const handleCreateAndAddMusics = async (listId: string, filePaths: string[], index = -1) => {
   // console.log(index + 1, index + 101)
   const paths = filePaths.slice(index + 1, index + 101)
-  let musicInfos = await workers.utilService.createLocalMusicInfos(paths, false)
+  let musicInfos = await workers.utilService.createLocalMusicInfos(paths, getDeviceId(), false)
   if (musicInfos.length) {
     const addMusicLocationType = index > -1 ? 'bottom' : getSettings()['list.addMusicLocationType']
     await sendMusicListAction({
@@ -121,7 +121,7 @@ export const handleAddMusics = async (listId: string, filePaths: string[], parse
 const handleChangeMusics = async (listId: string, filePaths: string[], index = -1) => {
   // console.log(index + 1, index + 101)
   const paths = filePaths.slice(index + 1, index + 101)
-  const musicInfos = await workers.utilService.createLocalMusicInfos(paths, true)
+  const musicInfos = await workers.utilService.createLocalMusicInfos(paths, getDeviceId(), true)
   let failedCount = paths.length - musicInfos.length
   if (musicInfos.length) {
     await sendMusicListAction({
@@ -140,6 +140,23 @@ const handleChangeMusics = async (listId: string, filePaths: string[], index = -
   }
   return failedCount
 }
+// /**
+//  * 检查音乐列表中的音乐是否包含设备ID，如果不包含则清空并重建列表
+//  * 注： desktop 0.8.0 及 web 0.10.0 之前的版本没有在本地列表中保存设备ID
+//  */
+// const checkHasDeviceId = async (
+//   listId: string,
+//   list: AnyListen.Music.MusicInfoLocal[]
+// ): Promise<AnyListen.Music.MusicInfoLocal[]> => {
+//   console.log(list.length, list[0]?.meta.deviceId)
+//   if (!list.length || list[0].meta.deviceId) return list
+//   await sendMusicListAction({
+//     action: 'list_music_clear',
+//     data: [listId],
+//   })
+//   console.log('checkHasDeviceId', true)
+//   return []
+// }
 const handleReadyWatcher = async (listId: string, files: string[], parseMetadata: boolean) => {
   const musics = (await workers.dbService.getListMusics(listId)) as AnyListen.Music.MusicInfoLocal[]
   const remoteIds = new Set(files)
@@ -251,9 +268,36 @@ const syncList = async (list: AnyListen.List.LocalListInfo) => {
     //   remove: removedFiles.length,
     //   change: changedFiles.length,
     // })
-    if (removedFiles.length) await handleMusicRemove(list.id, removedFiles)
-    if (addFiles.length) await handleMusicAdd(list.id, addFiles, list.meta.lazzyParseMeta !== true)
-    if (changedFiles.length) await handleMusicChanged(list.id, changedFiles)
+    let updated = false
+    if (removedFiles.length) {
+      await handleMusicRemove(list.id, removedFiles)
+      updated ||= true
+    }
+    if (addFiles.length) {
+      await handleMusicAdd(list.id, addFiles, list.meta.lazzyParseMeta !== true)
+      updated ||= true
+    }
+    if (changedFiles.length) {
+      await handleMusicChanged(list.id, changedFiles)
+      updated ||= true
+    }
+    if (updated) {
+      void sendMusicListAction({
+        action: 'list_update',
+        data: {
+          lists: [
+            {
+              ...list,
+              meta: {
+                ...list.meta,
+                syncTime: Date.now(),
+              },
+            },
+          ],
+          sync: true,
+        },
+      })
+    }
   }, 1000)
   const onFileProxy = proxyCallback((action: FileAction, path: string, ctimeMs?: number, mtimeMs?: number, size?: number) => {
     // console.log(`Local list file ${action}:`, path)
@@ -279,6 +323,21 @@ const syncList = async (list: AnyListen.List.LocalListInfo) => {
       if (idx !== -1) addFiles.splice(idx, 1)
     }
     await handleReadyWatcher(list.id, addFiles, list.meta.lazzyParseMeta !== true)
+    void sendMusicListAction({
+      action: 'list_update',
+      data: {
+        lists: [
+          {
+            ...list,
+            meta: {
+              ...list.meta,
+              syncTime: Date.now(),
+            },
+          },
+        ],
+        sync: true,
+      },
+    })
     ready = true
     // console.log(`Local list watcher ready: ${list.name} (${list.id})`)
     promiseFuncs[0]()

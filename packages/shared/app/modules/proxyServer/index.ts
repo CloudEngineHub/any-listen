@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 
-import { buildPublicPath } from '@any-listen/common/tools'
+import { buildVirtualPublicPath } from '@any-listen/common/tools'
 import { checkAndCreateDir, checkFile, extname, joinPath, randomBytes, toMD5, toSha256 } from '@any-listen/nodejs'
 import { verifyResource, type Options } from '@any-listen/nodejs/request'
 
@@ -25,7 +25,7 @@ export const createProxy = async (url: string, reqOptions: Options = {}, enabled
     url,
     enabledCache,
   })
-  return buildPublicPath(proxyServerState.proxyBaseUrl, name)
+  return buildVirtualPublicPath(proxyServerState.proxyBaseUrl, name)
 }
 
 export const checkProxyCache = async (url: string) => {
@@ -37,11 +37,12 @@ export const writeProxyCache = async (fileName: string, data: Uint8Array) => {
   const name = generateName(fileName)
   const filePath = joinPath(proxyServerState.cacheDir, name)
   await fs.writeFile(filePath, data)
-  return buildPublicPath(proxyServerState.proxyBaseUrl, name)
+  return buildVirtualPublicPath(proxyServerState.proxyBaseUrl, name)
 }
 
-export const initProxyServer = async (proxyBaseUrl: string, cacheDir: string) => {
+export const initProxyServer = async (proxyHost: string, proxyBaseUrl: string, cacheDir: string) => {
   // server ||= http.createServer()
+  proxyServerState.proxyHost = proxyHost
   proxyServerState.proxyBaseUrl = proxyBaseUrl
   proxyServerState.cacheDir = `${cacheDir}/proxy`
   await checkAndCreateDir(proxyServerState.cacheDir)

@@ -1,4 +1,5 @@
 import { API_PREFIX, PROXY_URL_PATH } from '@any-listen/common/constants'
+import { buildRealPublicPath } from '@any-listen/common/tools'
 import { isUrl } from '@any-listen/common/utils'
 
 export const onDomSizeChanged = (dom: HTMLElement, onChanged: (width: number, height: number) => void) => {
@@ -101,7 +102,10 @@ export const onVisibilityChange = (callback: (hidden: boolean) => void) => {
   }
 }
 
-export const buildUrl = (url: string, enableProxy: boolean) => {
+export const buildUrl = (url: string, enableProxy: boolean, proxyServerHost: string) => {
+  // console.log('buildUrl', url, enableProxy, proxyServerHost)
+  if (url.startsWith(proxyServerHost)) return url
+  url = buildRealPublicPath(url, proxyServerHost)
   if (!import.meta.env.VITE_IS_WEB) return url
   if (!enableProxy) return url
   if (import.meta.env.DEV) {
@@ -112,9 +116,10 @@ export const buildUrl = (url: string, enableProxy: boolean) => {
   return `${location.origin}${API_PREFIX}${PROXY_URL_PATH}/${encodeURIComponent(url)}`
 }
 
-export const checkPicUrl = async (picUrl: string | null | undefined, enableProxy: boolean) => {
+export const checkPicUrl = async (picUrl: string | null | undefined, enableProxy: boolean, proxyServerHost: string) => {
   if (!picUrl) return true
-  picUrl = buildUrl(picUrl, enableProxy)
+  if (!picUrl.startsWith(proxyServerHost)) picUrl = buildUrl(picUrl, enableProxy, proxyServerHost)
+
   return new Promise<boolean>((resolve, reject) => {
     const image = new Image(1, 1)
     image.addEventListener(

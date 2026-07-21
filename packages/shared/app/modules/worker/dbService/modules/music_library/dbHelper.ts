@@ -12,6 +12,8 @@ import {
   createListInsertStatement,
   createListMusicInfoQueryStatement,
   createListUpdateStatement,
+  createLocalMusicInfoQueryStatement,
+  createLocalMusicInfoUpdateStatement,
   createMusicInfoByListAndMusicInfoIdQueryStatement,
   createMusicInfoByMusicInfoIdQueryStatement,
   createMusicInfoClearStatement,
@@ -422,4 +424,19 @@ export const overwriteListData = (lists: UserListInfo[], musicInfos: MusicInfo[]
 export const getMusicInfoOrder = (listId: string, musicId: string) => {
   const musicInfoOrderStatement = createMusicInfoOrderStatement()
   return musicInfoOrderStatement.get({ list_id: listId, music_id: musicId })
+}
+
+export const queryLocalMusicInfo = () => {
+  const localMusicInfoQueryStatement = createLocalMusicInfoQueryStatement()
+  return localMusicInfoQueryStatement.all()
+}
+
+export const updateLocalMusicInfo = (params: Array<Pick<MusicInfo, 'id' | 'list_id' | 'meta'>>) => {
+  const db = getDB()
+  const localMusicInfoUpdateStatement = createLocalMusicInfoUpdateStatement()
+  db.transaction((params: Array<Pick<MusicInfo, 'id' | 'list_id' | 'meta'>>) => {
+    for (const item of params) {
+      localMusicInfoUpdateStatement.run(item)
+    }
+  })(params)
 }

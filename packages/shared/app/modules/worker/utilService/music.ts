@@ -41,11 +41,12 @@ export const getMusicFileLyric = async (
  */
 export const createLocalMusicInfos = async (
   filePaths: string[],
+  deviceId: string,
   parseMetadata: boolean
 ): Promise<AnyListen.Music.MusicInfoLocal[]> => {
   const list: AnyListen.Music.MusicInfoLocal[] = []
   for await (const path of filePaths) {
-    const musicInfo = await createLocalMusicInfo(path, parseMetadata)
+    const musicInfo = await createLocalMusicInfo(path, deviceId, parseMetadata)
     if (!musicInfo) continue
     list.push(musicInfo)
   }

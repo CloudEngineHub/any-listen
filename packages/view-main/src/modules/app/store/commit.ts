@@ -13,8 +13,9 @@ import { appState } from './state'
 //   appEvent.showLogin()
 // }
 
-export const setMachineId = (machineId: string) => {
-  appState.machineId = machineId
+export const setAppInfo = (appInfo: { machineId: string; proxyServerHost: string }) => {
+  appState.machineId = appInfo.machineId
+  appState.proxyServerHost = appInfo.proxyServerHost
 }
 
 export const setRootOffset = (x: number, y: number) => {

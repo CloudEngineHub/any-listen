@@ -192,8 +192,14 @@ export const singerFormat = (name: string) => {
     : name || ''
 }
 
-export const buildPublicPath = (basePath: string, name: string) => {
-  return `${basePath.startsWith('/') ? '.' : ''}${basePath}/${name}`
+export const VIRTUAL_PROTOCOL = 'al-ps-host:'
+export const buildVirtualPublicPath = (basePath: string, name: string) => {
+  // if (basePath.startsWith('/') ? '.')
+  return `${basePath.startsWith('/') ? VIRTUAL_PROTOCOL : ''}${basePath}/${name}`
+}
+export const buildRealPublicPath = (virtualPath: string, host: string) => {
+  if (!virtualPath.startsWith(VIRTUAL_PROTOCOL)) return virtualPath
+  return virtualPath.replace(VIRTUAL_PROTOCOL, host)
 }
 
 export const deduplicationList = <T extends AnyListen.Music.MusicInfo>(list: T[]): T[] => {
@@ -212,4 +218,29 @@ export interface ResourceType {
 }
 export const getSourceId = <T extends ResourceType | undefined | null>(source: T) => {
   return (source ? `${source.extensionId}_${source.id}` : undefined) as T extends ResourceType ? `${string}_${string}` : undefined
+}
+
+export const buildUserListInfoFull = <
+  T extends AnyListen.List.MyDefaultListInfoFull | AnyListen.List.MyLoveListInfoFull | AnyListen.List.UserListInfoFull,
+>(
+  info: T
+): T => {
+  const newInfo = {
+    id: info.id,
+    name: info.name,
+    type: info.type,
+    meta: info.meta,
+    parentId: info.parentId,
+    list: info.list,
+  }
+  return newInfo as T
+}
+
+export const buildListDataFull = (data: AnyListen.List.ListDataFull): AnyListen.List.ListDataFull => {
+  const lists = {
+    defaultList: buildUserListInfoFull(data.defaultList),
+    loveList: buildUserListInfoFull(data.loveList),
+    userList: data.userList.map((list) => buildUserListInfoFull(list)),
+  }
+  return lists
 }

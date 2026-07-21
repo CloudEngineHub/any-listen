@@ -4,6 +4,7 @@ import { createCache } from '@any-listen/common/cache'
 import type { Options } from '@any-listen/nodejs/request'
 
 export const proxyServerState = {
+  proxyHost: '',
   proxyBaseUrl: '',
   cacheDir: '',
   proxyMap: createCache<{

@@ -5,7 +5,7 @@ export interface MenuSelectInfo {
   onRemoveAllSelected: () => void
 }
 
-export interface ListInfo {
+interface ListInfoBase<T extends 'default' | AnyListen.List.UserListType> {
   id: string
   name: string
   pic?: string
@@ -14,10 +14,29 @@ export interface ListInfo {
   createTime?: string
   picIcon?: string
   saveable?: boolean
-  listMeta?: {
+  type: T
+  getSortTimeFn?: () => ((list: AnyListen.Music.MusicInfo[], type: AnyListen.List.SortFileType) => Promise<string[]>) | null
+}
+
+interface ListInfoLocal extends ListInfoBase<'local'> {
+  listMeta: {
+    deviceId: string
+  }
+}
+
+interface ListInfoRemote extends ListInfoBase<'remote'> {
+  listMeta: {
     extensionId: string
     source: string
     [key: string]: unknown
   }
-  getSortTimeFn?: () => ((list: AnyListen.Music.MusicInfo[], type: AnyListen.List.SortFileType) => Promise<string[]>) | null
 }
+interface ListInfoOnline extends ListInfoBase<'online'> {
+  listMeta: {
+    extensionId: string
+    source: string
+    [key: string]: unknown
+  }
+}
+
+export type ListInfo = ListInfoBase<'default' | 'general'> | ListInfoLocal | ListInfoRemote | ListInfoOnline

@@ -114,6 +114,7 @@
         desc: info?.desc,
         createTime: info?.date,
         saveable: true,
+        type: 'online',
         listMeta: {
           extensionId: searchInfo.extId,
           source: searchInfo.source,

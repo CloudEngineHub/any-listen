@@ -48,6 +48,7 @@ export interface ServerSocketWinMain extends ServerSocketBase {
   remoteQueuePlayer: AnyListen.IPCPlayer.ClientIPCActions
   remoteQueueList: AnyListen.IPCList.ClientIPCActions
   remoteQueueDislike: AnyListen.IPCDislikeList.ClientIPCActions
+  remoteQueueSync: AnyListen.IPCSync.ClientIPCActions
   remoteQueueExtension: AnyListen.IPCExtension.ClientIPCActions
   remoteExtension: AnyListen.IPCExtension.ClientIPCActions
 }

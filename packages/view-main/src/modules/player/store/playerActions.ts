@@ -7,6 +7,7 @@ import { getRandom } from '@any-listen/common/utils'
 import { checkPicUrl } from '@any-listen/web'
 
 import { executeLocalCommand } from '@/modules/app/store/action'
+import { appState } from '@/modules/app/store/state'
 import { addInfo } from '@/modules/dislikeList/actions'
 import {
   addListMusics,
@@ -230,7 +231,7 @@ const setMetadata = async (info: AnyListen.Player.PlayMusicInfo) => {
   }
   void loadImageUrl(info).then((url) => {
     if (!url) return
-    void checkPicUrl(url, settingState.setting['network.proxyAllResources']).catch(() => {
+    void checkPicUrl(url, settingState.setting['network.proxyAllResources'], appState.machineId).catch(() => {
       if (info.musicInfo.id != playerState.playMusicInfo?.musicInfo.id) return
       void loadImageUrl(info, true)
     })

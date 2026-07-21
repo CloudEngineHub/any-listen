@@ -31,7 +31,8 @@
   let menuLocation = $state.raw({ x: 0, y: 0 })
   let menus = $state.raw<MenuList<MenuType>>([])
   let info: AnyListen.List.MyListInfo | null
-  let fetching = false
+  // eslint-disable-next-line svelte/prefer-svelte-reactivity
+  let fetchingListStatus = new Set<string>()
 
   const setMenu = () => {
     if (!info) {
@@ -54,6 +55,7 @@
         break
     }
 
+    const fetching = fetchingListStatus.has(info.id)
     const disabledUpdate = fetching || (info.type == 'local' && info.meta.deviceId != appState.machineId)
     const isGeneral = GENERAL_LIST_TYPES.includes(info.type)
 
@@ -113,13 +115,15 @@
 
   onMount(() => {
     const unsub = musicLibraryEvent.on('fetchingListStatusUpdated', (_id, status) => {
+      if (status) fetchingListStatus.add(_id)
+      else fetchingListStatus.delete(_id)
       if (info?.id != _id) return
-      fetching = status
       setMenu()
     })
 
     return () => {
       unsub()
+      fetchingListStatus.clear()
     }
   })
 </script>

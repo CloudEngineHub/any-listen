@@ -37,8 +37,8 @@ export const createExposeApp = (client: ClientCall) => {
 // 暴露给前端的方法
 export const createClientApp = (main: MainCall) => {
   return {
-    async getMachineId() {
-      return main.getMachineId()
+    async getAppInfo() {
+      return main.getAppInfo()
     },
     async getSetting() {
       return main.getSetting()

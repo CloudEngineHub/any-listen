@@ -31,5 +31,13 @@ declare namespace AnyListen {
       // list: AnyListen.Dislike.ListItem[]
       rules: DislikeRules
     }
+
+    type MergeMode =
+      | 'merge_local_remote'
+      | 'merge_remote_local'
+      | 'overwrite_local_remote'
+      | 'overwrite_remote_local'
+      // | 'none'
+      | 'cancel'
   }
 }

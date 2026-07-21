@@ -11,14 +11,14 @@ import { playerState } from '../player/store/state'
 import { settingEvent } from '../setting/store/event'
 import { settingState } from '../setting/store/state'
 import { onConnected, onRelease } from './shared'
-import { getMachineId, sendInitedEvent, setFullScreen, setMachineId, setWorkerInitPromise } from './store/action'
+import { getAppInfo, sendInitedEvent, setFullScreen, setAppInfo, setWorkerInitPromise } from './store/action'
 import { appEvent } from './store/event'
 import { appState } from './store/state'
 
 let systemThemeModeChangedUnregister: (() => void) | null = null
 const init = async () => {
-  const machineId = await getMachineId()
-  setMachineId(machineId)
+  const appInfo = await getAppInfo()
+  setAppInfo(appInfo)
   if (import.meta.env.VITE_IS_WEB) {
     systemThemeModeChangedUnregister = onSystemThemeModeChanged((isDark) => {
       void setSystemThemeMode(isDark)

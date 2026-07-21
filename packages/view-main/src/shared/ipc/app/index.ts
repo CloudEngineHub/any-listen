@@ -1,8 +1,8 @@
 import { showFileSaveModal, showFileSelectModal } from '../fs/fileSelectModal'
 import { ipc } from '../ipc'
 
-export const getMachineId: AnyListen.IPC.ServerIPC['getMachineId'] = async () => {
-  return ipc.getMachineId()
+export const getAppInfo: AnyListen.IPC.ServerIPC['getAppInfo'] = async () => {
+  return ipc.getAppInfo()
 }
 
 export const getSetting: AnyListen.IPC.ServerIPC['getSetting'] = async () => {

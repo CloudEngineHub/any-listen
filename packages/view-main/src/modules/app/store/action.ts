@@ -85,14 +85,14 @@ export const scrollListTo = (listId: string, source: AnyListen.Player.SourceType
 
 export {
   setFullScreen,
-  setMachineId,
+  setAppInfo,
   setRootOffset,
   // setInited,
   // setShowLogin,
   setWorkerInitPromise,
 } from './commit'
 
-export { getLoginDevices, getMachineId, getSetting, removeLoginDevice, sendInitedEvent, setSetting } from '@/shared/ipc/app'
+export { getLoginDevices, getAppInfo, getSetting, removeLoginDevice, sendInitedEvent, setSetting } from '@/shared/ipc/app'
 
 // name: i18n.t('command.local.run')
 let lastUsedCommands: string[]

@@ -98,6 +98,7 @@ export const getMusicFilePath = async (musicInfo: AnyListen.Music.MusicInfo, sav
  */
 export const createLocalMusicInfo = async (
   path: string,
+  deviceId: string,
   parseMetadata: boolean
 ): Promise<AnyListen.Music.MusicInfoLocal | null> => {
   let result = await buildFileMetadata(path, parseMetadata)
@@ -113,6 +114,7 @@ export const createLocalMusicInfo = async (
     isLocal: true,
     interval,
     meta: {
+      deviceId,
       musicId: path,
       unparsed,
       albumName,

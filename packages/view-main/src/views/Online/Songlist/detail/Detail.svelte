@@ -112,6 +112,7 @@
         pic: info?.img,
         desc: info?.desc,
         saveable: true,
+        type: 'online',
         listMeta: {
           extensionId: searchInfo.extId,
           source: searchInfo.source,

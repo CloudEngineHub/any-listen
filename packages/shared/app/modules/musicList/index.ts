@@ -213,6 +213,8 @@ export const addFolderMusics = async (listId: string, filePaths: string[], onEnd
       void updateMusicPosition(listId, files)
       if (canceled) onEnd(null)
       else onEnd()
+      onFilesProxy.releaseProxy()
+      onEndProxy.releaseProxy()
     })
   })
   const id = await workers.utilService.scanFolderMusics(filePaths, onFilesProxy, onEndProxy)
