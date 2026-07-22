@@ -14,6 +14,7 @@
   let visible = $state(false)
   let currentType = $state<'list' | 'dislike'>('list')
   let isOverwrite = $state(false)
+  let hideRemoteOverwriteOption = $state(false)
   let promise: [(result: AnyListen.List.MergeMode | AnyListen.Dislike.MergeMode) => void, (error: Error) => void] | null = null
 
   const closeModal = () => {
@@ -46,8 +47,9 @@
     closeModal()
   }
 
-  export const show = async (syncType: 'list' | 'dislike') => {
+  export const show = async (syncType: 'list' | 'dislike', _hideRemoteOverwriteOption = false) => {
     currentType = syncType
+    hideRemoteOverwriteOption = _hideRemoteOverwriteOption
     isOverwrite = false
     visible = true
     return new Promise<AnyListen.List.MergeMode | AnyListen.Dislike.MergeMode>((resolve, reject) => {
@@ -84,7 +86,9 @@
         <dl class="btn-group">
           <dt class="label">{$t('sync.overwrite_label')}</dt>
           <dd class="btns">
-            <Btn onclick={() => handleSelectMode('overwrite_local_remote')}>{$t('sync.overwrite_btn_local_remote')}</Btn>
+            {#if !hideRemoteOverwriteOption}
+              <Btn onclick={() => handleSelectMode('overwrite_local_remote')}>{$t('sync.overwrite_btn_local_remote')}</Btn>
+            {/if}
             <Btn onclick={() => handleSelectMode('overwrite_remote_local')}>{$t('sync.overwrite_btn_remote_local')}</Btn>
           </dd>
           <dd style=" margin-top: 5px;font-size: 14px;">

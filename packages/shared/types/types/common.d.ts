@@ -127,5 +127,19 @@ declare global {
       warn: (message: unknown, ...args: unknown[]) => void
       error: (message: unknown, ...args: unknown[]) => void
     }
+
+    type BackupType = 'songlist' | 'settings' | 'txt' | 'txt_all' | 'csv' | 'csv_all'
+    interface SongListBackupData {
+      version: number
+      data: List.ListDataFull
+    }
+    interface SettingsBackupData {
+      version: number
+      data: AppSetting
+    }
+    interface BackupData {
+      songlist: SongListBackupData
+      settings: SettingsBackupData
+    }
   }
 }

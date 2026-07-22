@@ -1,3 +1,5 @@
+import { createProxyCallback } from 'message2call'
+
 import type { IPCSocket } from '@/preload/ws'
 
 import type { ClientCall, ExposeFunctions } from '.'
@@ -115,6 +117,18 @@ export const createClientApp = (ipcSocket: IPCSocket) => {
     },
     async clearCache() {
       return ipcSocket.remote.clearCache()
+    },
+    async exportData(path, types) {
+      return ipcSocket.remote.exportData(path, types)
+    },
+    async importData(path, selectData, getListMergeMode) {
+      const proxySelectData = createProxyCallback(selectData)
+      const proxyGetListMergeMode = createProxyCallback(getListMergeMode)
+
+      return ipcSocket.remote.importData(path, proxySelectData, proxyGetListMergeMode).finally(() => {
+        proxySelectData.releaseProxy()
+        proxyGetListMergeMode.releaseProxy()
+      })
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

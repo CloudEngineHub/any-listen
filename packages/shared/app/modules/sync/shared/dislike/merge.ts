@@ -1,3 +1,5 @@
+import { CANCELED_ERROR_MSG } from '@any-listen/common/constants'
+
 import { filterRules } from './shared'
 
 const mergeList = (sourceListData: string, targetListData: string): string => {
@@ -11,8 +13,8 @@ const handleMergeListData = async (
 ): Promise<[string, boolean, boolean]> => {
   let now = performance.now()
   const mode = await getListMergeMode()
-  if (mode == 'cancel') throw new Error('cancel')
-  if (performance.now() - now > 60_000) throw new Error('getListMergeMode timeout')
+  if (mode == 'cancel') throw new Error(CANCELED_ERROR_MSG)
+  if (performance.now() - now > 120_000) throw new Error('getListMergeMode timeout')
   let listData: string
   let requiredUpdateLocalListData = true
   let requiredUpdateRemoteListData = true
@@ -35,7 +37,7 @@ const handleMergeListData = async (
     // case 'cancel':
     // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
     default:
-      throw new Error('cancel')
+      throw new Error(CANCELED_ERROR_MSG)
   }
   return [listData, requiredUpdateLocalListData, requiredUpdateRemoteListData]
 }
@@ -48,7 +50,7 @@ export const mergeFullData = async (
   remoteListData: string,
   getListMergeMode: () => Promise<AnyListen.Dislike.MergeMode>,
   getLocalListData: () => Promise<string>
-): Promise<[string, boolean, boolean]> => {
+): Promise<[mergedData: string, requiredUpdateLocalListData: boolean, requiredUpdateRemoteListData: boolean]> => {
   if (checkListDataEmpty(localListData)) {
     if (checkListDataEmpty(remoteListData)) {
       return [localListData, false, false]

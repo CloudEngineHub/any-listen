@@ -373,6 +373,23 @@ export const settings: SettingListSection[] = [
     ],
   },
   {
+    id: 'backup',
+    // t('settings.backup')
+    name: 'settings.backup',
+    list: [
+      {
+        id: 'settings.backup.backup',
+        type: 'component',
+        component: async () => import('./Backup/Backup.svelte'),
+      },
+      {
+        id: 'settings.backup.export_other',
+        type: 'component',
+        component: async () => import('./Backup/ExportOther.svelte'),
+      },
+    ],
+  },
+  {
     id: 'other',
     name: 'settings.other',
     list: [

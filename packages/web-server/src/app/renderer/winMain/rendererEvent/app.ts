@@ -1,8 +1,9 @@
 import { clearCache, getCacheSize } from '@any-listen/app/cache'
+import { exportData, importData } from '@any-listen/app/modules/backup'
 import { proxyServerState } from '@any-listen/app/modules/proxyServer/state'
 
 import { appState, setSystemMode, updateSetting } from '@/app/app'
-import { fileSystemAction } from '@/app/modules/fileSystem'
+import { checkAllowPathError, fileSystemAction } from '@/app/modules/fileSystem'
 import { socketEvent } from '@/modules/ipc/event'
 import { broadcast } from '@/modules/ipc/websocket'
 import { getClientInfos } from '@/shared/data'
@@ -72,6 +73,14 @@ export const createExposeApp = () => {
     },
     async clearCache(event) {
       await clearCache()
+    },
+    async exportData(event, path, types) {
+      checkAllowPathError(path)
+      await exportData(path, types)
+    },
+    async importData(event, path, selectData, getListMergeMode) {
+      checkAllowPathError(path)
+      await importData(path, selectData, getListMergeMode)
     },
   } satisfies Partial<ExposeClientFunctions>
 }

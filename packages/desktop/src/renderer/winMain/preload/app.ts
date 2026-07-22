@@ -1,3 +1,5 @@
+import { createProxyCallback } from 'message2call'
+
 import type { ClientCall, ExposeFunctions, MainCall } from '.'
 
 // 暴露给后端的方法
@@ -105,6 +107,18 @@ export const createClientApp = (main: MainCall) => {
     },
     async clearCache() {
       return main.clearCache()
+    },
+    async exportData(path, types) {
+      return main.exportData(path, types)
+    },
+    async importData(path, selectData, getListMergeMode) {
+      const proxySelectData = createProxyCallback(selectData)
+      const proxyGetListMergeMode = createProxyCallback(getListMergeMode)
+
+      return main.importData(path, proxySelectData, proxyGetListMergeMode).finally(() => {
+        proxySelectData.releaseProxy()
+        proxyGetListMergeMode.releaseProxy()
+      })
     },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

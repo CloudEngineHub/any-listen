@@ -1,3 +1,5 @@
+import { CANCELED_ERROR_MSG } from '@any-listen/common/constants'
+
 import { getDeviceId } from '../../../../common/deviceId'
 
 const mergeMusicList = (
@@ -116,16 +118,16 @@ const mergeList = (
       const sourceListUpdateTime = sourceListDataObj.get(list.id)!.meta.posTime || 0
       if (sourceListUpdateTime >= targetListUpdateTime) return
       // 调整位置
-      const [newList] = newListData.userList.splice(
-        newListData.userList.findIndex((l) => l.id == list.id),
+      const [newList] = newUserList.splice(
+        newUserList.findIndex((l) => l.id == list.id),
         1
       )
       newList.meta.posTime = targetListUpdateTime
       newUserList.splice(index, 0, newList)
     } else if (targetListUpdateTime) {
-      newListData.userList.splice(index, 0, { ...list })
+      newUserList.splice(index, 0, { ...list })
     } else {
-      newListData.userList.push({ ...list })
+      newUserList.push({ ...list })
     }
   })
   newListData.userList = newUserList
@@ -167,8 +169,8 @@ const handleMergeListData = async (
   let now = performance.now()
   const mode = await getListMergeMode()
 
-  if (mode == 'cancel') throw new Error('cancel')
-  if (performance.now() - now > 60_000) throw new Error('getListMergeMode timeout')
+  if (mode == 'cancel') throw new Error(CANCELED_ERROR_MSG)
+  if (performance.now() - now > 120_000) throw new Error('getListMergeMode timeout')
   console.log('handleMergeListData', 'remoteListData, localListData')
   let listData: AnyListen.List.ListDataFull
   let requiredUpdateLocalListData = true
@@ -198,7 +200,7 @@ const handleMergeListData = async (
     // case 'cancel':
     // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
     default:
-      throw new Error('cancel')
+      throw new Error(CANCELED_ERROR_MSG)
   }
   return [listData, requiredUpdateLocalListData, requiredUpdateRemoteListData]
 }
@@ -212,7 +214,9 @@ export const mergeFullData = async (
   addMusicLocationType: AnyListen.AddMusicLocationType,
   getListMergeMode: () => Promise<AnyListen.List.MergeMode>,
   getLocalListData: () => Promise<AnyListen.List.ListDataFull>
-): Promise<[AnyListen.List.ListDataFull, boolean, boolean]> => {
+): Promise<
+  [mergedData: AnyListen.List.ListDataFull, requiredUpdateLocalListData: boolean, requiredUpdateRemoteListData: boolean]
+> => {
   if (checkListDataEmpty(localListData)) {
     if (checkListDataEmpty(remoteListData)) {
       return [localListData, false, false]

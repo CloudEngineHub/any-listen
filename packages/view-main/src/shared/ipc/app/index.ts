@@ -95,3 +95,10 @@ export const getCacheSize: AnyListen.IPC.ServerIPC['getCacheSize'] = async () =>
 export const clearCache: AnyListen.IPC.ServerIPC['clearCache'] = async () => {
   return ipc.clearCache()
 }
+
+export const exportData: AnyListen.IPC.ServerIPC['exportData'] = async (path, types) => {
+  return ipc.exportData(path, types)
+}
+export const importData: AnyListen.IPC.ServerIPC['importData'] = async (path, selectData, getListMergeMode) => {
+  return ipc.importData(path, selectData, getListMergeMode)
+}

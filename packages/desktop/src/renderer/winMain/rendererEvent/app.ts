@@ -1,4 +1,5 @@
 import { clearCache, getCacheSize } from '@any-listen/app/cache'
+import { exportData, importData } from '@any-listen/app/modules/backup'
 import { proxyServerState } from '@any-listen/app/modules/proxyServer/state'
 
 import { appState, updateSetting } from '@/app'
@@ -97,6 +98,12 @@ export const createExposeApp = () => {
     },
     async clearCache() {
       await Promise.all([clearAppCache(), clearCache()])
+    },
+    async exportData(event, path, types) {
+      await exportData(path, types)
+    },
+    async importData(event, path, selectData, getListMergeMode) {
+      await importData(path, selectData, getListMergeMode)
     },
   } satisfies Partial<ExposeFunctions>
 }

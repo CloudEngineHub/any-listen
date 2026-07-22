@@ -17,7 +17,7 @@ export const checkAllowPath = (filePath: string, allowedDirs = global.anylisten.
   filePath = normalizePath(filePath)
   return allowedDirs.some((p) => filePath.startsWith(p))
 }
-const checkAllowPathError = (filePath: string) => {
+export const checkAllowPathError = (filePath: string) => {
   if (checkAllowPath(filePath)) return
   throw new Error(`Not allow path: ${filePath}`)
 }

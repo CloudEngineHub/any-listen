@@ -73,4 +73,10 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
   getCacheSize: () => number
   /** 清理缓存 */
   clearCache: () => void
+  exportData: (path: string, types: AnyListen.BackupType[]) => void
+  importData: (
+    path: string,
+    selectData: (types: AnyListen.BackupType[]) => Promise<AnyListen.BackupType[]>,
+    getListMergeMode: () => Promise<AnyListen.List.MergeMode>
+  ) => void
 }>
