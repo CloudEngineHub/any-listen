@@ -48,6 +48,7 @@
     const local = source === 'local'
     const localList = deviceid != null
     const notLocalList = localList && deviceid != appState.machineId
+    const notLocalMusic = notLocalList || selectInfo.musicInfo.meta.deviceId != appState.machineId
     const newMenu: Array<MenuList<MenuType>[number] | false> = [
       { action: 'play', label: $t('user_list_music_menu__play') },
       { action: 'playLater', label: $t('user_list_music_menu__play_later') },
@@ -65,7 +66,7 @@
     ]
     if (import.meta.env.VITE_IS_DESKTOP) {
       if (selectInfo.musicInfo.isLocal) {
-        newMenu.splice(6, 0, { action: 'locate', label: $t('user_list_music_menu__locate') })
+        newMenu.splice(6, 0, { action: 'locate', disabled: notLocalMusic, label: $t('user_list_music_menu__locate') })
       }
     }
     menus = newMenu.filter((m) => m !== false) as MenuList<MenuType>
