@@ -75,6 +75,9 @@ export const initWinMain = () => {
   winMainEvent.on('show', () => {
     void rendererIPC.winShow(true)
   })
+  winMainEvent.on('fullscreen', (isFullscreen) => {
+    void rendererIPC.fullscreen(isFullscreen)
+  })
   themeEvent.on('theme_change', (theme) => {
     void rendererIPC.themeChanged(theme)
   })

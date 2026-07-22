@@ -53,6 +53,10 @@ const winEvent = () => {
   browserWindow.on('leave-full-screen', () => {
     winMainState.isFullScreen = false
     winMainEvent.fullscreen(false)
+
+    if (browserWindow?.resizable) {
+      browserWindow.setResizable(false)
+    }
   })
 
   browserWindow.once('ready-to-show', () => {
@@ -249,7 +253,7 @@ export const setFullScreen = (isFullscreen: boolean): boolean => {
       browserWindow.setFullScreen(isFullscreen)
     } else {
       browserWindow.setFullScreen(isFullscreen)
-      browserWindow.setResizable(isFullscreen)
+      if (isLinux) browserWindow.setResizable(isFullscreen)
     }
   } else {
     browserWindow.setFullScreen(isFullscreen)

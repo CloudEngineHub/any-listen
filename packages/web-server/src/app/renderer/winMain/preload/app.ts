@@ -14,6 +14,9 @@ export const createExposeApp = (client: ClientCall) => {
     async winShow(event, show) {
       return client.winShow(show)
     },
+    async fullscreen(event, isFullscreen) {
+      return client.fullscreen(isFullscreen)
+    },
     // async createDesktopLyricProcess(event) {
     //   // TODO
     //   // return client.createDesktopLyricProcess(event.ports)

@@ -12,6 +12,9 @@ export const createExposeApp = (client: ClientCall) => {
     async winShow(event, show) {
       return client.winShow(show)
     },
+    async fullscreen(event, isFullscreen) {
+      return client.fullscreen(isFullscreen)
+    },
 
     async showMessageBox(event, key, extId, options) {
       return client.showMessageBox(key, extId, options)

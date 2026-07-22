@@ -11,6 +11,8 @@ export declare type ClientCommonActions = WarpPromiseRecord<{
   hotKeyConfigUpdated: <T extends string>(config: AnyListen.HotKey.HotKeyConfigAll<T>) => void
   /** 窗口显示变更 */
   winShow: (show: boolean) => void
+  /** 全屏模式变更 */
+  fullscreen: (fullscreen: boolean) => void
   /** 显示消息弹窗 */
   showMessageBox: (key: string, extensionId: string, options: AnyListen.IPCCommon.MessageDialogOptions) => Promise<number>
   showInputBox: (

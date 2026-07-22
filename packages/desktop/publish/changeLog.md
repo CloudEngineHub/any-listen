@@ -18,6 +18,7 @@
 - Fixed an issue where the **Lyric Offset** feature was not functioning correctly.
 - Fixed an issue where the playback speed feature was not functioning correctly.
 - Fixed a playlist synchronization issue when playing online lists ([#225](https://github.com/any-listen/any-listen/issues/225)).
+- Fixed an issue where full-screen window state on macOS might not sync correctly ([#257](https://github.com/any-listen/any-listen/issues/257)).
 
 ### Changed
 
@@ -45,6 +46,7 @@
 - 修复歌词偏移功能异常的问题。
 - 修复播放速率功能异常的问题。
 - 修复播放在线列表时的播放列表同步问题（[#225](https://github.com/any-listen/any-listen/issues/225)）。
+- 修复 macOS 全屏窗口状态可能不同步的问题（[#257](https://github.com/any-listen/any-listen/issues/257)）。
 
 ### 变更
 
