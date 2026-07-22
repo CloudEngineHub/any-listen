@@ -7,6 +7,7 @@
 ### Fixed
 
 - Fixed an issue where full-screen window state on macOS might not sync correctly ([#257](https://github.com/any-listen/any-listen/issues/257)).
+- Fixed an issue where the progress bar could display incorrectly when updating media control bar information on macOS ([#256](https://github.com/any-listen/any-listen/issues/256)).
 
 ---
 
@@ -19,3 +20,4 @@
 ### 修复
 
 - 修复 macOS 全屏窗口状态可能不同步的问题（[#257](https://github.com/any-listen/any-listen/issues/257)）。
+- 修复 macOS 更新媒体控制栏信息时的进度条显示问题（[#256](https://github.com/any-listen/any-listen/issues/256)）
