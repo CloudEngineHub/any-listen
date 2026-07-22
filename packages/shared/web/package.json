@@ -2,8 +2,8 @@
   "name": "@shared/web",
   "dependencies": {
     "@any-listen/common": "workspace:@shared/common@*",
-    "@simonwep/pickr": "^1.9.1",
-    "js-sha256": "^0.11.1"
+    "@simonwep/pickr": "^1.10.0",
+    "js-sha256": "^0.12.0"
   },
   "devDependencies": {
     "@any-listen/eslint": "workspace:@shared/eslint@*",
