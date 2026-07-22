@@ -4,6 +4,7 @@ import { DB_NAME, LIST_IDS } from '@any-listen/common/constants'
 import { removeDB } from '@any-listen/nodejs/tools'
 import Database from 'better-sqlite3'
 
+import { initBackupTask } from './backupTask'
 import migrateData from './migrate'
 import tables, { DB_VERSION } from './tables'
 import verifyDB from './verifyDB'
@@ -67,6 +68,7 @@ export const init = async (dataPath: string, nativeBindingPath: string, machineI
     db.close()
     return null
   }
+  await initBackupTask(db)
 
   // https://www.sqlite.org/lang_vacuum.html
   // db.exec('VACUUM "main"')

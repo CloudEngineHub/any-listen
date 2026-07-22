@@ -46,6 +46,7 @@ export class Event extends _Event {
    * @param isRemote 是否属于远程操作
    */
   async list_data_overwrite(listData: AnyListen.List.ListDataFull, isRemote = false) {
+    await dbService.breakChangeBackup()
     await dbService.listDataOverwrite(listData)
     this.emitEvent('list_data_overwrite', listData, isRemote)
     this.list_changed()
