@@ -387,6 +387,11 @@ export const settings: SettingListSection[] = [
         type: 'component',
         component: async () => import('./Backup/ExportOther.svelte'),
       },
+      {
+        id: 'settings.backup.auto_backup',
+        type: 'component',
+        component: async () => import('./Backup/AutoBackup.svelte'),
+      },
     ],
   },
   {

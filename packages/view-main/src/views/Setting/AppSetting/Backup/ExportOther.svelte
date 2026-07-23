@@ -92,10 +92,10 @@
 
 <TitleContent name={$t('settings.backup.export_other')} desc={$t('settings.backup.export_other_desc')}>
   <div class="settings-item-content">
-    <Btn onclick={handleExportPlayListToText}>
+    <Btn min onclick={handleExportPlayListToText}>
       {$t('settings.backup.text')}
     </Btn>
-    <Btn onclick={handleExportPlayListToCsv}>
+    <Btn min onclick={handleExportPlayListToCsv}>
       {$t('settings.backup.csv')}
     </Btn>
   </div>

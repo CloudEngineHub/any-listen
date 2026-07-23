@@ -1,27 +1,56 @@
 import path from 'node:path'
 
+import { checkAndCreateDir, copyFile, removePath } from '@any-listen/nodejs'
 import type Database from 'better-sqlite3'
 
 import { BACKUP_DIR_NAME, DAILY_BACKUP_DIR_NAME, EVENT_BACKUP_DIR_NAME } from './constants'
 import type { BackupPathInfo, BackupType, BackupTrigger } from './types'
 
+let defaultBackupPath = ''
+let backupPath = ''
 export const resolveBackupType = (trigger: BackupTrigger): BackupType => {
   return trigger == 'event' ? 'event' : 'daily'
 }
 
-export const resolveBackupPathInfo = (db: Database.Database, type: BackupType): BackupPathInfo | null => {
+export const resolveBackupPathInfo = async (db: Database.Database, type: BackupType): Promise<BackupPathInfo | null> => {
   const dbPath = db.name
   if (!dbPath || dbPath == ':memory:') return null
 
   const parsed = path.parse(dbPath)
+  if (backupPath) {
+    try {
+      await checkAndCreateDir(backupPath)
+    } catch (err) {
+      console.error('Failed to create backup path:', err)
+      // eslint-disable-next-line require-atomic-updates
+      backupPath = parsed.dir
+    }
+  } else backupPath = parsed.dir
   const subDir = type == 'daily' ? DAILY_BACKUP_DIR_NAME : EVENT_BACKUP_DIR_NAME
-  const backupDir = path.join(parsed.dir, BACKUP_DIR_NAME, subDir)
-  const prefix = `${parsed.name}.${type}.backup.`
+  const backupDir = path.join(backupPath, BACKUP_DIR_NAME, subDir)
+  const prefix = `${parsed.name}.db.`
 
   return {
     dir: backupDir,
     prefix,
     filePath: (suffix: string) => path.join(backupDir, `${prefix}${suffix}.bak`),
+  }
+}
+
+export const initBackupPath = (defaultPath: string, path: string) => {
+  defaultBackupPath = defaultPath
+  backupPath = path || defaultPath
+}
+export const setBackupPath = async (path: string) => {
+  path ||= defaultBackupPath
+  if (backupPath === path) return
+  let oldPath = backupPath
+  backupPath = path
+  try {
+    await copyFile(oldPath, path)
+    await removePath(oldPath)
+  } catch (err) {
+    console.error('Failed to move backup path:', err)
   }
 }
 

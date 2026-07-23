@@ -79,4 +79,5 @@ export declare type ServerCommonActions = WarpPromiseRecord<{
     selectData: (types: AnyListen.BackupType[]) => Promise<AnyListen.BackupType[]>,
     getListMergeMode: () => Promise<AnyListen.List.MergeMode>
   ) => void
+  setBackupPath: (path: string) => Promise<void>
 }>

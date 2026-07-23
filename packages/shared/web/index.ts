@@ -103,7 +103,7 @@ export const onVisibilityChange = (callback: (hidden: boolean) => void) => {
 }
 
 export const buildUrl = (url: string, enableProxy: boolean, proxyServerHost: string) => {
-  console.log('buildUrl', url, enableProxy, proxyServerHost)
+  // console.log('buildUrl', url, enableProxy, proxyServerHost)
   if (url.startsWith(proxyServerHost)) return url
   url = buildRealPublicPath(url, proxyServerHost)
   if (!import.meta.env.VITE_IS_WEB) return url

@@ -15,7 +15,12 @@ let nativeBindingPath = './native/better_sqlite3.node'
 if (import.meta.env.DEV) nativeBindingPath = '../../build-config/tempLib/better_sqlite3.node'
 
 const initServices = async (dataPath: string) => {
-  let dbFileExists = await workers.dbService.init(dataPath, nativeBindingPath, appState.machineId)
+  let dbFileExists = await workers.dbService.init(
+    dataPath,
+    nativeBindingPath,
+    appState.machineId,
+    appState.appSetting['backup.backupPath']
+  )
   if (dbFileExists === null) {
     const backupPath = path.join(dataPath, `${DB_NAME}.${Date.now()}.bak`)
     dialog.showMessageBoxSync({
@@ -25,7 +30,7 @@ const initServices = async (dataPath: string) => {
     })
     await workers.dbService.backupDB(dataPath, nativeBindingPath, backupPath)
     openDirInExplorer(backupPath)
-    await workers.dbService.init(dataPath, nativeBindingPath, appState.machineId)
+    await workers.dbService.init(dataPath, nativeBindingPath, appState.machineId, appState.appSetting['backup.backupPath'])
   }
 }
 

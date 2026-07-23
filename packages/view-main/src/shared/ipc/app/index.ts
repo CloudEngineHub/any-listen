@@ -102,3 +102,6 @@ export const exportData: AnyListen.IPC.ServerIPC['exportData'] = async (path, ty
 export const importData: AnyListen.IPC.ServerIPC['importData'] = async (path, selectData, getListMergeMode) => {
   return ipc.importData(path, selectData, getListMergeMode)
 }
+export const setBackupPath: AnyListen.IPC.ServerIPC['setBackupPath'] = async (path) => {
+  return ipc.setBackupPath(path)
+}

@@ -591,6 +591,9 @@ declare global {
        */
       'sync.webdav.syncEnable.dislike': boolean
 
+      /** 备份路径 */
+      'backup.backupPath': string
+
       /**
        * 主题id
        */

@@ -6,6 +6,7 @@ import { appState, updateSetting } from '@/app'
 import { quit } from '@/app/actions'
 import { clipboardReadText, clipboardWriteText, exitApp, openDirInExplorer, openUrl } from '@/shared/electron'
 import { getFonts } from '@/shared/fontManage'
+import { workers } from '@/worker'
 
 import type { ExposeFunctions } from '.'
 import { checkUpdate, downloadUpdate, restartUpdate } from '../autoUpdate'
@@ -104,6 +105,10 @@ export const createExposeApp = () => {
     },
     async importData(event, path, selectData, getListMergeMode) {
       await importData(path, selectData, getListMergeMode)
+    },
+    async setBackupPath(event, path) {
+      await workers.dbService.setBackupPath(path)
+      updateSetting({ 'backup.backupPath': path })
     },
   } satisfies Partial<ExposeFunctions>
 }

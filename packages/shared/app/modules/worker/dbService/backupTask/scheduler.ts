@@ -16,3 +16,11 @@ export const scheduleDailyBackup = (run: () => Promise<void>) => {
     })
   }, delay)
 }
+
+export const isSameDay = (timeA: number, timeB: number) => {
+  if (!Number.isFinite(timeA) || !Number.isFinite(timeB)) return false
+
+  const a = new Date(timeA)
+  const b = new Date(timeB)
+  return a.getFullYear() == b.getFullYear() && a.getMonth() == b.getMonth() && a.getDate() == b.getDate()
+}

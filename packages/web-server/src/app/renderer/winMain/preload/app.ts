@@ -130,5 +130,8 @@ export const createClientApp = (ipcSocket: IPCSocket) => {
         proxyGetListMergeMode.releaseProxy()
       })
     },
+    async setBackupPath(path) {
+      return ipcSocket.remote.setBackupPath(path)
+    },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }

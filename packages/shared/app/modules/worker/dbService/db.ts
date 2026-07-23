@@ -1,10 +1,10 @@
 import path from 'node:path'
 
 import { DB_NAME, LIST_IDS } from '@any-listen/common/constants'
-import { removeDB } from '@any-listen/nodejs/tools'
+import { removeDB, getDefaultAutoBackupPath } from '@any-listen/nodejs/tools'
 import Database from 'better-sqlite3'
 
-import { initBackupTask } from './backupTask'
+import { initBackupTask, initBackupPath } from './backupTask'
 import migrateData from './migrate'
 import tables, { DB_VERSION } from './tables'
 import verifyDB from './verifyDB'
@@ -37,7 +37,12 @@ export const backupDB = async (dataPath: string, nativeBindingPath: string, back
 }
 
 // 打开、初始化数据库
-export const init = async (dataPath: string, nativeBindingPath: string, machineId: string): Promise<boolean | null> => {
+export const init = async (
+  dataPath: string,
+  nativeBindingPath: string,
+  machineId: string,
+  backupPath?: string
+): Promise<boolean | null> => {
   const databasePath = path.join(dataPath, DB_NAME)
   const nativeBinding = path.join(__dirname, nativeBindingPath)
   let dbFileExists = true
@@ -68,6 +73,7 @@ export const init = async (dataPath: string, nativeBindingPath: string, machineI
     db.close()
     return null
   }
+  initBackupPath(getDefaultAutoBackupPath(dataPath), backupPath || '')
   await initBackupTask(db)
 
   // https://www.sqlite.org/lang_vacuum.html

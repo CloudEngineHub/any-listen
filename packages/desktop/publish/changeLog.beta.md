@@ -2,13 +2,7 @@
 
 ### Added
 
-- Added a **Data Sync** feature with support for syncing data to WebDAV, available under _Settings > Data Sync_.
-- Added a **Backup & Restore** feature with support for exporting or importing list data locally, and exporting to `txt` and `csv` formats, available under _Settings > Backup & Restore_.
-
-### Fixed
-
-- Fixed an issue where full-screen window state on macOS might not sync correctly ([#257](https://github.com/any-listen/any-listen/issues/257)).
-- Fixed an issue where the progress bar could display incorrectly when updating media control bar information on macOS ([#256](https://github.com/any-listen/any-listen/issues/256)).
+- Added an **Automatic Backup** setting that allows changing the backup path under _Settings > Backup & Restore_.
 
 ---
 
@@ -16,10 +10,4 @@
 
 ### 新增
 
-- 新增 **「数据同步」** 功能，支持将数据同步到 WebDAV，可在 _设置 > 数据同步_ 中使用。
-- 新增 **「备份与恢复」** 功能，支持将列表数据导出到或导入本地，并支持导出为 `txt`、`csv` 格式，可在 _设置 > 备份与恢复_ 中使用。
-
-### 修复
-
-- 修复 macOS 全屏窗口状态可能不同步的问题（[#257](https://github.com/any-listen/any-listen/issues/257)）。
-- 修复 macOS 更新媒体控制栏信息时的进度条显示问题（[#256](https://github.com/any-listen/any-listen/issues/256)）
+- 新增 **「自动备份」** 设置，支持在 _设置 > 备份与恢复_ 中更改自动备份路径。

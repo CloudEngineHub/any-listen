@@ -16,5 +16,6 @@ export const getListDataMD5 = (listData: AnyListen.List.ListDataFull) => {
   return toMD5(JSON.stringify(listData))
 }
 
-export const stripLocalData = (localDataCacheFile: string, listData: AnyListen.List.ListDataFull) => {}
-export const restoreLocalData = (localDataCacheFile: string, listData: AnyListen.List.ListDataFull) => {}
+export const getDefaultAutoBackupPath = (appDataPath: string) => {
+  return path.join(appDataPath, 'backup')
+}

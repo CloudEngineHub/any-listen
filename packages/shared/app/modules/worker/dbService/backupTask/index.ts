@@ -4,9 +4,9 @@ import type Database from 'better-sqlite3'
 
 import { requestBackupEvent } from '../event'
 import { queryMetadataLastBackupTime, saveMetadataLastBackupTime } from '../modules/metadata/backupTime'
-import { EVENT_BACKUP_THROTTLE_MS, ONE_DAY_MS } from './constants'
+import { EVENT_BACKUP_THROTTLE_MS } from './constants'
 import { createTempBackupPath, formatBackupTimestamp, resolveBackupPathInfo, resolveBackupType } from './naming'
-import { scheduleDailyBackup } from './scheduler'
+import { isSameDay, scheduleDailyBackup } from './scheduler'
 import {
   ensureDir,
   ensureUniqueBackupPath,
@@ -28,11 +28,11 @@ const backup = async (db: Database.Database, trigger: BackupTrigger): Promise<bo
   const backupType = resolveBackupType(trigger)
   const isDailyBackup = backupType == 'daily'
 
-  const info = resolveBackupPathInfo(db, backupType)
-  if (!info) return false
-
   const task = (async () => {
+    const info = await resolveBackupPathInfo(db, backupType)
+    if (!info) return false
     const tempPath = createTempBackupPath(info.filePath)
+
     try {
       await ensureDir(info.dir)
       const files = await listBackupFiles(info.dir, info.prefix)
@@ -81,7 +81,7 @@ export const breakChangeBackup = async (db: Database.Database) => {
 
 const runBackupTask = async (db: Database.Database) => {
   const lastBackupTime = queryMetadataLastBackupTime()
-  if (Date.now() - lastBackupTime >= ONE_DAY_MS) {
+  if (!isSameDay(lastBackupTime, Date.now())) {
     await backup(db, 'init')
   }
 
@@ -123,3 +123,6 @@ export const initBackupTask = async (db: Database.Database) => {
   setupEventBackupTrigger(db)
   await runBackupTask(db)
 }
+
+// export const setBackupPath = (backupPath: string) => {}
+export { initBackupPath, setBackupPath } from './naming'

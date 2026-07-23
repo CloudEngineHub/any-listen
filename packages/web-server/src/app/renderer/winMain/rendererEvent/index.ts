@@ -41,6 +41,7 @@ export type ExposeClientFunctions = Omit<
   | 'getSystemFonts'
   | 'showDesktopLyric'
   | 'hideDesktopLyric'
+  | 'setBackupPath'
 >
 
 let isInitialized = false

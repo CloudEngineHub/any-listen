@@ -37,7 +37,7 @@
   const handleSelectImportFile = async () => {
     const result = await showOpenDialog({
       title: i18n.t('settings.backup.restore_file'),
-      filters: [{ name: 'Any Listen Backup File', extensions: [CONFIG_FILE_EXT.slice(1)] }],
+      filters: [{ name: 'Any Listen Backup File', extensions: [CONFIG_FILE_EXT.slice(1), 'json'] }],
       properties: ['openFile'],
     })
     if (result.canceled) return
@@ -68,10 +68,10 @@
 
 <TitleContent name={$t('settings.backup')}>
   <div class="settings-item-content">
-    <Btn onclick={handleExportData}>
+    <Btn min onclick={handleExportData}>
       {$t('settings.backup.export')}
     </Btn>
-    <Btn onclick={handleSelectImportFile}>
+    <Btn min onclick={handleSelectImportFile}>
       {$t('settings.backup.import')}
     </Btn>
   </div>

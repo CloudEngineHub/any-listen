@@ -120,5 +120,8 @@ export const createClientApp = (main: MainCall) => {
         proxyGetListMergeMode.releaseProxy()
       })
     },
+    async setBackupPath(path) {
+      return main.setBackupPath(path)
+    },
   } satisfies Partial<AnyListen.IPC.ServerIPC>
 }
