@@ -107,9 +107,6 @@ export const createAudio = () => {
       })
     }
   })
-  audio.addEventListener('error', () => {
-    audio!.src = ''
-  })
 
   audioContext = new window.AudioContext({ latencyHint: 'playback' })
 }
@@ -451,7 +448,8 @@ export const setPitchShifter = (val: number) => {
 
 export const setResource = (src: string) => {
   if (!audio) return
-  audio.src = buildUrl(src, settingState.setting['network.proxyAllResources'], appState.proxyServerHost)
+  src = buildUrl(src, settingState.setting['network.proxyAllResources'], appState.proxyServerHost)
+  audio.src = src
 }
 
 export const setPlay = () => {
