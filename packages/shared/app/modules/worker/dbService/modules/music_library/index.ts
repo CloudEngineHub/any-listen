@@ -413,6 +413,7 @@ export const musicsAdd = (
   musicInfos: AnyListen.Music.MusicInfo[],
   addMusicLocationType: AnyListen.AddMusicLocationType
 ) => {
+  initUserList()
   if (![LIST_IDS.DEFAULT, LIST_IDS.LOVE, LIST_IDS.LAST_PLAYED, ...userLists.map((l) => l.id)].includes(listId)) {
     throw new Error(`listId ${listId} not found`)
   }
@@ -752,6 +753,7 @@ export const getListsFirstMusics = (ids: string[]) => {
 }
 
 export const getAllListData = (): AnyListen.List.ListDataFull => {
+  initListInfo()
   initUserList()
 
   const lists = {

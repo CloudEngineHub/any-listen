@@ -75,8 +75,13 @@ const mergeUserList = <T extends ListInfoFull>(
           : sourceListData
     list = targetList.list
   }
+  const selectedList = sourceListData.meta.updateTime > targetListData.meta.updateTime ? sourceListData : targetListData
   const newInfo: T = {
-    ...(sourceListData.meta.updateTime > targetListData.meta.updateTime ? sourceListData : targetListData),
+    ...selectedList,
+    meta: {
+      ...selectedList.meta,
+      playCount: sourceListData.meta.playCount + targetListData.meta.playCount,
+    },
     list,
   }
   newInfo.meta.songCount = list.length

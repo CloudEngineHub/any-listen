@@ -83,6 +83,8 @@ const mergeUserList = <T extends ListInfoFull>(
     const latestListTime = 'syncTime' in latestList.meta ? latestList.meta.syncTime : 0
     const snapshotListTime = snapshotList && 'syncTime' in snapshotList.meta ? snapshotList.meta.syncTime : 0
     const latestListTimeMax = Math.max(localListTime, latestListTime, snapshotListTime)
+    localList.meta.syncTime = latestListTimeMax
+    if ('syncTime' in latestList.meta) latestList.meta.syncTime = latestListTimeMax
     const targetList =
       latestListTimeMax === localListTime
         ? localList
@@ -91,8 +93,23 @@ const mergeUserList = <T extends ListInfoFull>(
           : (snapshotList ?? localList)
     list = targetList.list
   }
+  const selectedList = localList.meta.updateTime > latestList.meta.updateTime ? localList : latestList
+  const snapshotPlayCount = snapshotList?.meta.playCount || 0
+  let playCount: number
+  if (snapshotPlayCount) {
+    playCount = localList.meta.playCount - snapshotPlayCount
+    if (playCount < 0) {
+      playCount = latestList.meta.playCount - snapshotPlayCount + localList.meta.playCount
+    } else {
+      playCount += latestList.meta.playCount
+    }
+  } else playCount = localList.meta.playCount + latestList.meta.playCount
   const newInfo: T = {
-    ...(localList.meta.updateTime > latestList.meta.updateTime ? localList : latestList),
+    ...selectedList,
+    meta: {
+      ...selectedList.meta,
+      playCount,
+    },
     list,
   }
   newInfo.meta.songCount = list.length
