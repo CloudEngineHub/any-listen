@@ -57,12 +57,12 @@ export const initMediaSessionInfo = () => {
       })
     } else prevPicUrl = ''
 
-    // @ts-expect-error
-    navigator.mediaSession.metadata = new window.MediaMetadata(mediaMetadata)
-
     // https://github.com/any-listen/any-listen/issues/256
     if (import.meta.env.VITE_IS_MAC) updatePositionState()
     if (import.meta.env.VITE_IS_WEB) if (window.os === 'mac') updatePositionState()
+
+    // @ts-expect-error
+    navigator.mediaSession.metadata = new window.MediaMetadata(mediaMetadata)
   }
 
   const updatePositionState = (
